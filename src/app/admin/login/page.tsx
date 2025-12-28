@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeSlash, Lock1 } from "iconsax-reactjs";
 import { toast } from "react-toastify";
+import { useUser } from "@/context/useUserContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { loginUser } = useUser();
   const [isPending, setIsPending] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -89,6 +91,9 @@ export default function LoginPage() {
         if (data.data.user) {
           localStorage.setItem("user", JSON.stringify(data.data.user));
         }
+
+        // Update the UserContext immediately
+        loginUser(data.data.user || data.data, data.data.accessToken);
       }
 
       toast.success(data.message || "Login successful!");
