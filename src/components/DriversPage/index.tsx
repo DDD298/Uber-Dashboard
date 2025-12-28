@@ -37,7 +37,9 @@ export default function DriversPage() {
   const handleEdit = (driverId: string) => {
     const driver = driversData?.data.find(
       (d: IDriver) =>
-        d.clerk_id === driverId || d._id === driverId || d.id === driverId
+        d.clerk_id === driverId ||
+        d._id === driverId ||
+        String(d.id) === driverId
     );
     if (driver) {
       setSelectedDriver(driver);
@@ -49,7 +51,9 @@ export default function DriversPage() {
   const handleView = (driverId: string) => {
     const driver = driversData?.data.find(
       (d: IDriver) =>
-        d.clerk_id === driverId || d._id === driverId || d.id === driverId
+        d.clerk_id === driverId ||
+        d._id === driverId ||
+        String(d.id) === driverId
     );
     if (driver) {
       setSelectedDriver(driver);
