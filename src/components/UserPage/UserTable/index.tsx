@@ -11,8 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { IUser } from "@/interface/auth";
 import { motion } from "framer-motion";
 import { IconTrash, IconMenu3 } from "@tabler/icons-react";
-import { User as UserIcon } from "lucide-react";
-
 interface UserTableProps {
   users: IUser[];
   isSearching: boolean;
@@ -43,9 +41,6 @@ export const UserTable = ({
             </TableHead>
             <TableHead className="font-semibold text-gray-800 text-nowrap w-[180px]">
               Email
-            </TableHead>
-            <TableHead className="font-semibold text-gray-800 text-nowrap">
-              SĐT
             </TableHead>
             <TableHead className="font-semibold text-gray-800 text-nowrap">
               Tổng chuyến đi
@@ -105,11 +100,6 @@ export const UserTable = ({
                       <span className="text-gray-800 text-wrap">
                         {user.email}
                       </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="text-gray-800">{user.phone || "-"}</span>
                     </div>
                   </TableCell>
                   <TableCell>

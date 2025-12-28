@@ -85,26 +85,26 @@ export const UserForm = ({
 
     setIsUploadingAvatar(true);
 
-    uploadFileMutation(
-      { file },
-      {
-        onSuccess: (response: IUploadResponse) => {
-          if (response?.status) {
-            const imageUrl = response?.data?.url;
-            const newFormData = { ...formData, avatar: imageUrl };
-            onFormDataChange(newFormData);
-            toast.success(response?.message);
-          } else {
-            toast.error(response?.message);
-          }
-          setIsUploadingAvatar(false);
-        },
-        onError: (error: any) => {
-          toast.error(error?.response?.data?.message);
-          setIsUploadingAvatar(false);
-        },
-      }
-    );
+    const formData = new FormData();
+    formData.append("file", file);
+
+    uploadFileMutation(formData, {
+      onSuccess: (response: IUploadResponse) => {
+        if (response?.status) {
+          const imageUrl = response?.data?.url;
+          const newFormData = { ...formData, avatar: imageUrl };
+          onFormDataChange(newFormData);
+          toast.success(response?.message);
+        } else {
+          toast.error(response?.message);
+        }
+        setIsUploadingAvatar(false);
+      },
+      onError: (error: any) => {
+        toast.error(error?.response?.data?.message);
+        setIsUploadingAvatar(false);
+      },
+    });
 
     e.target.value = "";
   };

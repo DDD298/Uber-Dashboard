@@ -28,6 +28,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { motion } from "framer-motion";
 import { IconSearch, IconPlus, IconX } from "@tabler/icons-react";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import type { IUser } from "@/interface/auth";
 
 export default function UserPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,6 +37,7 @@ export default function UserPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
 
@@ -52,6 +54,9 @@ export default function UserPage() {
     limit: pageSize,
   });
   const { mutate: deleteUserMutation, isPending: isDeleting } = useDeleteUser();
+
+  const displayUsers = usersData?.data || [];
+  const pagination = usersData?.pagination;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -70,8 +75,13 @@ export default function UserPage() {
   };
 
   const handleEdit = (id: string) => {
-    setSelectedUserId(id);
-    setIsDetailsDialogOpen(true);
+    const user = displayUsers.find(
+      (u: IUser) => u.clerk_id === id || u._id === id || u.id === id
+    );
+    if (user) {
+      setSelectedUser(user);
+      setIsDetailsDialogOpen(true);
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -95,9 +105,6 @@ export default function UserPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  const displayUsers = usersData?.data || [];
-  const pagination = usersData?.pagination;
 
   return (
     <div className="space-y-4 bg-[#eee] p-4 rounded-lg border border-lightBorderV1">
@@ -215,14 +222,14 @@ export default function UserPage() {
         onSuccess={() => refetch()}
       />
 
-      {selectedUserId && (
+      {selectedUser && (
         <UserDetailsDialog
           isOpen={isDetailsDialogOpen}
           onClose={() => {
             setIsDetailsDialogOpen(false);
-            setSelectedUserId(null);
+            setSelectedUser(null);
           }}
-          userId={selectedUserId}
+          user={selectedUser}
           onSuccess={() => refetch()}
         />
       )}
