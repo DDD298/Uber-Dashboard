@@ -66,7 +66,7 @@ export default function DriverDetailsDialog({
                       {new Intl.NumberFormat("vi-VN", {
                         style: "currency",
                         currency: "VND",
-                      }).format(driver?.total_earnings || 0)}
+                      }).format(Number(driver?.total_earnings) || 0)}
                     </p>
                   </div>
                   <div className="p-4 bg-gray-50 rounded-lg">

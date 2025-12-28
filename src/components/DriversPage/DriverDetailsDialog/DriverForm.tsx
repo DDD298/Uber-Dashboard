@@ -50,7 +50,10 @@ export default function DriverForm({ driver, onClose }: DriverFormProps) {
       // Update existing driver
       updateDriverMutation.mutate(
         {
-          id: driver.clerk_id || driver._id || driver.id || "",
+          id:
+            driver.clerk_id ||
+            driver._id ||
+            (driver.id ? String(driver.id) : ""),
           data,
         },
         {
