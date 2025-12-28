@@ -119,7 +119,7 @@ export default function RecentActivity() {
         </div>
         <Link
           href="/admin/rides"
-          className="text-sm text-green-600 hover:text-green-700 font-medium"
+          className="text-sm text-green-700 hover:text-green-700 font-medium"
         >
           Xem tất cả
         </Link>
@@ -194,7 +194,7 @@ export default function RecentActivity() {
 
                 {/* Price */}
                 <div className="text-right flex-shrink-0">
-                  <div className="text-base font-bold text-green-600">
+                  <div className="text-base font-bold text-green-700">
                     {formatCurrency(Number(ride.fare_price))}
                   </div>
                   <p className="text-sm text-gray-400 mt-0.5">

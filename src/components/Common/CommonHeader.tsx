@@ -1,10 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMenuSidebar } from "@/stores/useMenuSidebar";
 import { mdiLoading } from "@mdi/js";
 import { Icon } from "@mdi/react";
 import type React from "react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useUser } from "@/context/useUserContext";
 import { HamburgerMenu } from "iconsax-reactjs";
 import { IconLogout } from "@tabler/icons-react";
@@ -25,6 +27,7 @@ export default function CommonHeader() {
       <div
         className="w-full fixed top-0 left-0 right-0 z-50
       p-4 px-4 bg-mainDarkBackgroundV1 border-b border-b-darkBorderV1 flex justify-between items-center h-[78px]"
+        suppressHydrationWarning
       >
         <div className="flex items-center w-[244px] justify-between">
           <button

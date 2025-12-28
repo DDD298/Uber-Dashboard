@@ -6,7 +6,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import {
+  MapPin,
+  DollarSign,
+  Star,
+  MessageSquare,
+  History,
+  Car,
+} from "lucide-react";
+
 import type { IDriver } from "@/interface/auth";
 import DriverForm from "./DriverForm";
 import DriverTable from "./DriverTable";
@@ -26,9 +35,12 @@ export default function DriverDetailsDialog({
 }: DriverDetailsDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        size="medium"
+        className="max-h-[90vh] overflow-y-auto bg-[#eee]"
+      >
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-gray-800">
             {isEditMode
               ? driver
                 ? "Chỉnh sửa tài xế"
@@ -38,61 +50,140 @@ export default function DriverDetailsDialog({
         </DialogHeader>
 
         {isEditMode ? (
-          <DriverForm driver={driver} onClose={onClose} />
+          <Card className="p-6">
+            <DriverForm driver={driver} onClose={onClose} />
+          </Card>
         ) : (
-          <Tabs defaultValue="info" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="info">Thông tin</TabsTrigger>
-              <TabsTrigger value="stats">Thống kê</TabsTrigger>
-              <TabsTrigger value="history">Lịch sử</TabsTrigger>
-            </TabsList>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Left Column: Driver Info & Vehicle */}
+              <div className="md:col-span-1 space-y-4">
+                <Card className="p-4 shadow-sm border-gray-100 h-full">
+                  {driver && <DriverTable driver={driver} />}
+                </Card>
+              </div>
 
-            <TabsContent value="info" className="mt-4">
-              {driver && <DriverTable driver={driver} />}
-            </TabsContent>
+              {/* Right Column: Stats & History */}
+              <div className="md:col-span-2 space-y-4">
+                {/* Statistics Section */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-green-700 flex items-center gap-2">
+                    <Car size={18} className="text-green-700" />
+                    Thống kê hoạt động
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Total Rides */}
+                    <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
+                      <div className="flex items-start justify-between">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          Tổng chuyến đi
+                        </p>
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                          <MapPin size={14} className="text-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {driver?.total_rides || 0}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          chuyến hoàn thành
+                        </p>
+                      </div>
+                    </Card>
 
-            <TabsContent value="stats" className="mt-4">
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500">Tổng chuyến đi</p>
-                    <p className="text-2xl font-bold">
-                      {driver?.total_rides || 0}
-                    </p>
-                  </div>
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500">Tổng thu nhập</p>
-                    <p className="text-2xl font-bold">
-                      {new Intl.NumberFormat("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      }).format(Number(driver?.total_earnings) || 0)}
-                    </p>
-                  </div>
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500">Đánh giá trung bình</p>
-                    <p className="text-2xl font-bold">
-                      {driver?.average_rating
-                        ? Number(driver.average_rating).toFixed(2)
-                        : "N/A"}
-                    </p>
-                  </div>
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500">Số lượt đánh giá</p>
-                    <p className="text-2xl font-bold">
-                      {driver?.rating_count || 0}
-                    </p>
+                    {/* Earnings */}
+                    <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
+                      <div className="flex items-start justify-between">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          Tổng thu nhập
+                        </p>
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                          <DollarSign size={14} className="text-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                            maximumFractionDigits: 0,
+                          }).format(Number(driver?.total_earnings) || 0)}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          doanh thu tích lũy
+                        </p>
+                      </div>
+                    </Card>
+
+                    {/* Rating */}
+                    <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
+                      <div className="flex items-start justify-between">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          Đánh giá TB
+                        </p>
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                          <Star size={14} className="text-white fill-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {driver?.average_rating
+                            ? Number(driver.average_rating).toFixed(2)
+                            : "N/A"}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          điểm trung bình
+                        </p>
+                      </div>
+                    </Card>
+
+                    {/* Rating Count */}
+                    <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
+                      <div className="flex items-start justify-between">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          Lượt đánh giá
+                        </p>
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                          <MessageSquare size={14} className="text-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {driver?.rating_count || 0}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          phản hồi từ khách
+                        </p>
+                      </div>
+                    </Card>
                   </div>
                 </div>
-              </div>
-            </TabsContent>
 
-            <TabsContent value="history" className="mt-4">
-              <div className="text-center py-8 text-gray-500">
-                <p>Lịch sử chuyến đi sẽ được hiển thị ở đây</p>
+                {/* History Section */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-green-700 flex items-center gap-2">
+                    <History size={18} className="text-green-700" />
+                    Lịch sử chuyến đi
+                  </h3>
+                  <Card className="bg-white p-4 border-dashed border-2 border-gray-200 shadow-none">
+                    <div className="flex flex-col items-center justify-center text-center">
+                      <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                        <History size={24} className="text-gray-400" />
+                      </div>
+                      <h4 className="font-medium text-gray-900 mb-1">
+                        Chưa có lịch sử chuyến đi
+                      </h4>
+                      <p className="text-sm text-gray-500 max-w-xs">
+                        Tài xế này chưa thực hiện chuyến đi nào hoặc lịch sử
+                        chưa được cập nhật.
+                      </p>
+                    </div>
+                  </Card>
+                </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         )}
       </DialogContent>
     </Dialog>

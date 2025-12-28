@@ -166,7 +166,7 @@ export default function DriverTable({
                             ? Number(driver.average_rating).toFixed(2)
                             : "5.00"}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-sm text-gray-400">
                           ({driver.rating_count || 0})
                         </span>
                       </div>
@@ -180,7 +180,7 @@ export default function DriverTable({
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <span className="font-medium text-green-600">
+                      <span className="font-medium text-green-700">
                         {formatCurrency(driver.total_earnings)}
                       </span>
                     </TableCell>

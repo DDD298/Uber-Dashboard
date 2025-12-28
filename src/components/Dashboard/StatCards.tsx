@@ -64,7 +64,7 @@ const StatCard = ({
       <Link href={link}>
         <Card className="group cursor-pointer relative overflow-hidden p-5 h-full flex flex-col bg-white transition-all duration-300 shadow-md border border-gray-100">
           {/* Header with title and icon */}
-          <div className="flex items-start justify-between mb-3">
+          <div className="flex items-start justify-between">
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
               {title}
             </h3>
@@ -86,8 +86,8 @@ const StatCard = ({
           {/* Trend indicator */}
           {trendValue && (
             <div className="flex items-center gap-1.5 mt-auto pt-2">
-              <TrendingUp size={14} className="text-green-600" />
-              <span className="text-sm font-semibold text-green-600">
+              <TrendingUp size={14} className="text-green-700" />
+              <span className="text-sm font-semibold text-green-700">
                 {trendValue}
               </span>
               {trendLabel && (

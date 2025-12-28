@@ -56,7 +56,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
           </p>
         </div>
         <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center">
-          <TrendingUp className="text-green-600" size={20} />
+          <TrendingUp className="text-green-700" size={20} />
         </div>
       </div>
 
@@ -97,7 +97,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
                   <p className="font-semibold text-gray-900 text-sm truncate mb-1">
                     {driver.first_name} {driver.last_name}
                   </p>
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-sm">
                     <div className="flex items-center gap-1">
                       <Star
                         size={12}
@@ -119,10 +119,10 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
 
                 {/* Earnings */}
                 <div className="text-right flex-shrink-0">
-                  <p className="font-bold text-green-600 text-base">
+                  <p className="font-bold text-green-700 text-base">
                     {formatCurrency(Number(driver.total_earnings))}
                   </p>
-                  <p className="text-xs text-gray-400">thu nhập</p>
+                  <p className="text-sm text-gray-400">thu nhập</p>
                 </div>
               </div>
             </Link>
@@ -134,7 +134,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
         <div className="mt-5 pt-4 border-t border-gray-100">
           <Link
             href="/admin/drivers"
-            className="text-sm text-green-600 hover:text-green-700 font-semibold flex items-center justify-center gap-2 group transition-colors"
+            className="text-sm text-green-700 hover:text-green-700 font-semibold flex items-center justify-center gap-2 group transition-colors"
           >
             Xem tất cả tài xế
             <ArrowRight

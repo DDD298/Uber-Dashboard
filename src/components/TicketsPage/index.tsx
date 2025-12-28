@@ -72,7 +72,7 @@ export default function TicketsPage() {
   const displayTickets = ticketsData?.data || [];
 
   return (
-    <div className="space-y-6 bg-[#eee] p-4 rounded-lg border border-lightBorderV1">
+    <div className="space-y-4 bg-[#eee] p-4 rounded-lg border border-lightBorderV1">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

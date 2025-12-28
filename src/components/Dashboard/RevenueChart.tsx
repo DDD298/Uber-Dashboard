@@ -246,7 +246,7 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-100">
             <p className="text-sm text-gray-600 mb-1">Tổng doanh thu</p>
             <div className="flex items-end gap-3">
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-green-700">
                 {new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
@@ -254,7 +254,7 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
                   maximumFractionDigits: 0,
                 }).format(totalRevenue)}
               </p>
-              <div className="flex items-center gap-1 text-green-600 text-sm font-medium mb-1">
+              <div className="flex items-center gap-1 text-green-700 text-sm font-medium mb-1">
                 <TrendingUp size={14} />
                 <span>+{revenueGrowth}%</span>
               </div>
@@ -265,10 +265,10 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
               Tổng chuyến đi hoàn thành
             </p>
             <div className="flex items-end gap-3">
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-green-700">
                 {totalRides.toLocaleString("vi-VN")} chuyến
               </p>
-              <div className="flex items-center gap-1 text-green-600 text-sm font-medium mb-1">
+              <div className="flex items-center gap-1 text-green-700 text-sm font-medium mb-1">
                 <TrendingUp size={14} />
                 <span>+{ridesGrowth}%</span>
               </div>
