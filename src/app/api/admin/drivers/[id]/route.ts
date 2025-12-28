@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - Get single driver with details
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const driverId = parseInt(params.id);
 
-    const drivers = await sql(
+    const drivers = await executeSql(
       `SELECT 
         d.*,
         (SELECT COUNT(*) FROM rides WHERE driver_id = d.id) as total_rides,
@@ -31,7 +31,7 @@ export async function GET(
     }
 
     // Get recent rides
-    const recentRides = await sql(
+    const recentRides = await executeSql(
       `SELECT 
         r.*,
         json_build_object(
@@ -48,7 +48,7 @@ export async function GET(
     );
 
     // Get recent ratings
-    const recentRatings = await sql(
+    const recentRatings = await executeSql(
       `SELECT 
         rat.*,
         json_build_object(
@@ -69,17 +69,20 @@ export async function GET(
       [driverId]
     );
 
+    const driver = drivers[0] as any;
+    
     return NextResponse.json({
       success: true,
       data: {
-        ...drivers[0],
+        ...driver,
         recentRides,
         recentRatings,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -87,12 +90,12 @@ export async function GET(
 
 // PATCH - Update driver
 export async function PATCH(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const driverId = parseInt(params.id);
-    const body = await request.json();
+    const body = await _request.json();
     const {
       first_name,
       last_name,
@@ -107,7 +110,7 @@ export async function PATCH(
 
     // Build update fields
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (first_name !== undefined) {
@@ -156,7 +159,7 @@ export async function PATCH(
 
     values.push(driverId);
 
-    const result = await sql(
+    const result = await executeSql(
       `UPDATE drivers
        SET ${updates.join(", ")}
        WHERE id = $${paramIndex}
@@ -175,9 +178,10 @@ export async function PATCH(
       success: true,
       data: result[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -185,14 +189,14 @@ export async function PATCH(
 
 // DELETE - Delete driver
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const driverId = parseInt(params.id);
 
     // Check if driver has any rides
-    const ridesCount = await sql(
+    const ridesCount = await executeSql<{ count: string }>(
       `SELECT COUNT(*) as count FROM rides WHERE driver_id = $1`,
       [driverId]
     );
@@ -208,7 +212,7 @@ export async function DELETE(
       );
     }
 
-    const result = await sql(
+    const result = await executeSql(
       `DELETE FROM drivers WHERE id = $1 RETURNING *`,
       [driverId]
     );
@@ -224,9 +228,10 @@ export async function DELETE(
       success: true,
       message: "Driver deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

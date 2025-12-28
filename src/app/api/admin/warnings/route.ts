@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - List warnings with filters
 export async function GET(request: NextRequest) {
@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build WHERE conditions
-    let conditions = [];
-    let values: any[] = [];
+    const conditions: string[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (driverId) {
@@ -50,24 +50,22 @@ export async function GET(request: NextRequest) {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     // Get total count
-    const countResult = await sql(
+    const countResult = await executeSql<{ total: string }>(
       `SELECT COUNT(*) as total FROM driver_warnings w ${whereClause}`,
       values
     );
     const total = parseInt(countResult[0].total);
 
     // Get warnings with driver info
-    const warnings = await sql(
+    const warnings = await executeSql(
       `SELECT 
         w.*,
         json_build_object(
           'driver_id', d.id,
           'first_name', d.first_name,
           'last_name', d.last_name,
-          'email', d.email,
-          'status', d.status,
           'average_rating', d.average_rating,
-          'warning_count', d.warning_count
+          'rating_count', d.rating_count
         ) as driver,
         CASE 
           WHEN w.rating_id IS NOT NULL THEN (
@@ -101,9 +99,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -122,7 +121,7 @@ export async function POST(request: NextRequest) {
       action_taken,
     } = body;
 
-    const result = await sql(
+    const result = await executeSql(
       `INSERT INTO driver_warnings (
         driver_id, warning_type, severity, reason,
         rating_id, action_taken, created_at
@@ -132,15 +131,8 @@ export async function POST(request: NextRequest) {
       [driver_id, warning_type, severity, reason, rating_id || null, action_taken]
     );
 
-    // Update driver warning count
-    await sql(
-      `UPDATE drivers
-       SET 
-         warning_count = warning_count + 1,
-         last_warning_at = NOW()
-       WHERE id = $1`,
-      [driver_id]
-    );
+    // Note: warning_count and last_warning_at columns don't exist in current schema
+    // Skipping driver update
 
     return NextResponse.json(
       {
@@ -149,9 +141,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

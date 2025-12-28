@@ -110,7 +110,9 @@ export default function DashboardLayout({
                                 />
                               </div>
                               {isOpen && (
-                                <span className="text-nowrap">{menu.name}</span>
+                                <span className="text-nowrap text-sm">
+                                  {menu.name}
+                                </span>
                               )}
                             </div>
                           </RippleEffect>

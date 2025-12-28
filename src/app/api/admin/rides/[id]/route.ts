@@ -1,35 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - Get single ride with full details
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const rideId = parseInt(params.id);
 
-    const rides = await sql(
+    const rides = await executeSql(
       `SELECT 
         r.*,
         json_build_object(
           'driver_id', d.id,
           'first_name', d.first_name,
           'last_name', d.last_name,
-          'email', d.email,
-          'phone', d.phone,
           'profile_image_url', d.profile_image_url,
           'car_image_url', d.car_image_url,
           'car_seats', d.car_seats,
           'rating', d.rating,
-          'vehicle_type', d.vehicle_type,
-          'status', d.status
+          'vehicle_type', d.vehicle_type
         ) as driver,
         json_build_object(
           'clerk_id', u.clerk_id,
           'name', u.name,
-          'email', u.email,
-          'phone', u.phone
+          'email', u.email
         ) as user,
         CASE 
           WHEN rat.id IS NOT NULL THEN json_build_object(
@@ -59,9 +55,10 @@ export async function GET(
       success: true,
       data: rides[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -79,7 +76,7 @@ export async function PATCH(
 
     // Build update fields
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (ride_status !== undefined) {
@@ -113,7 +110,7 @@ export async function PATCH(
 
     values.push(rideId);
 
-    const result = await sql(
+    const result = await executeSql(
       `UPDATE rides
        SET ${updates.join(", ")}
        WHERE ride_id = $${paramIndex}
@@ -132,9 +129,10 @@ export async function PATCH(
       success: true,
       data: result[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -142,24 +140,24 @@ export async function PATCH(
 
 // DELETE - Delete ride
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const rideId = parseInt(params.id);
 
     // Check if ride has rating
-    const ratingCheck = await sql(
+    const ratingCheck = await executeSql<{ id: number }>(
       `SELECT id FROM ratings WHERE ride_id = $1`,
       [rideId]
     );
 
     if (ratingCheck.length > 0) {
       // Delete rating first
-      await sql(`DELETE FROM ratings WHERE ride_id = $1`, [rideId]);
+      await executeSql(`DELETE FROM ratings WHERE ride_id = $1`, [rideId]);
     }
 
-    const result = await sql(
+    const result = await executeSql(
       `DELETE FROM rides WHERE ride_id = $1 RETURNING *`,
       [rideId]
     );
@@ -175,9 +173,10 @@ export async function DELETE(
       success: true,
       message: "Ride deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

@@ -1,27 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - Get single warning
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const warningId = parseInt(params.id);
 
-    const warnings = await sql(
+    const warnings = await executeSql(
       `SELECT 
         w.*,
         json_build_object(
           'driver_id', d.id,
           'first_name', d.first_name,
           'last_name', d.last_name,
-          'email', d.email,
-          'phone', d.phone,
-          'status', d.status,
           'average_rating', d.average_rating,
-          'warning_count', d.warning_count,
-          'bad_ratings_count', d.bad_ratings_count
+          'rating_count', d.rating_count
         ) as driver,
         CASE 
           WHEN w.rating_id IS NOT NULL THEN (
@@ -54,9 +50,10 @@ export async function GET(
       success: true,
       data: warnings[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -73,7 +70,7 @@ export async function PATCH(
     const { resolved_by, notes, action_taken } = body;
 
     const updates: string[] = ["resolved_at = NOW()"];
-    const values: any[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (resolved_by !== undefined) {
@@ -91,7 +88,7 @@ export async function PATCH(
 
     values.push(warningId);
 
-    const result = await sql(
+    const result = await executeSql(
       `UPDATE driver_warnings
        SET ${updates.join(", ")}
        WHERE id = $${paramIndex}
@@ -110,9 +107,10 @@ export async function PATCH(
       success: true,
       data: result[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -120,13 +118,13 @@ export async function PATCH(
 
 // DELETE - Delete warning
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const warningId = parseInt(params.id);
 
-    const result = await sql(
+    const result = await executeSql<{ driver_id: number }>(
       `DELETE FROM driver_warnings WHERE id = $1 RETURNING *`,
       [warningId]
     );
@@ -138,21 +136,17 @@ export async function DELETE(
       );
     }
 
-    // Decrease driver warning count
-    await sql(
-      `UPDATE drivers
-       SET warning_count = GREATEST(warning_count - 1, 0)
-       WHERE id = $1`,
-      [result[0].driver_id]
-    );
+    // Note: warning_count column doesn't exist in current schema
+    // Skipping driver update
 
     return NextResponse.json({
       success: true,
       message: "Warning deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

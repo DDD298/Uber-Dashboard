@@ -1,7 +1,7 @@
+"use client";
 
-
-import React, { useState, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useCallback } from "react";
+import { cn } from "@/lib/utils";
 
 interface RippleProps {
   x: number;
@@ -17,12 +17,12 @@ interface RippleEffectProps {
   duration?: number;
 }
 
-const Ripple: React.FC<RippleProps & { color: string; duration: number }> = ({ 
-  x, 
-  y, 
-  size, 
-  color, 
-  duration 
+const Ripple: React.FC<RippleProps & { color: string; duration: number }> = ({
+  x,
+  y,
+  size,
+  color,
+  duration,
 }) => {
   return (
     <span
@@ -43,32 +43,37 @@ export const RippleEffect: React.FC<RippleEffectProps> = ({
   children,
   className,
   disabled = false,
-  rippleColor = 'rgba(255, 255, 255, 0.3)',
+  rippleColor = "rgba(255, 255, 255, 0.3)",
   duration = 600,
 }) => {
   const [ripples, setRipples] = useState<(RippleProps & { id: number })[]>([]);
 
-  const addRipple = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (disabled) return;
+  const addRipple = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (disabled) return;
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const size = Math.max(rect.width, rect.height) * 2;
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const size = Math.max(rect.width, rect.height) * 2;
 
-    const newRipple = {
-      x,
-      y,
-      size,
-      id: Date.now(),
-    };
+      const newRipple = {
+        x,
+        y,
+        size,
+        id: Date.now(),
+      };
 
-    setRipples(prev => [...prev, newRipple]);
+      setRipples((prev) => [...prev, newRipple]);
 
-    setTimeout(() => {
-      setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id));
-    }, duration);
-  }, [disabled, duration]);
+      setTimeout(() => {
+        setRipples((prev) =>
+          prev.filter((ripple) => ripple.id !== newRipple.id)
+        );
+      }, duration);
+    },
+    [disabled, duration]
+  );
 
   return (
     <div
@@ -76,7 +81,7 @@ export const RippleEffect: React.FC<RippleEffectProps> = ({
       onMouseDown={addRipple}
     >
       {children}
-      {ripples.map(ripple => (
+      {ripples.map((ripple) => (
         <Ripple
           key={ripple.id}
           x={ripple.x}
@@ -91,32 +96,37 @@ export const RippleEffect: React.FC<RippleEffectProps> = ({
 };
 
 export const useRipple = (
-  rippleColor: string = 'rgba(255, 255, 255, 0.3)',
+  rippleColor: string = "rgba(255, 255, 255, 0.3)",
   duration: number = 600
 ) => {
   const [ripples, setRipples] = useState<(RippleProps & { id: number })[]>([]);
 
-  const addRipple = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const size = Math.max(rect.width, rect.height) * 2;
+  const addRipple = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const size = Math.max(rect.width, rect.height) * 2;
 
-    const newRipple = {
-      x,
-      y,
-      size,
-      id: Date.now(),
-    };
+      const newRipple = {
+        x,
+        y,
+        size,
+        id: Date.now(),
+      };
 
-    setRipples(prev => [...prev, newRipple]);
+      setRipples((prev) => [...prev, newRipple]);
 
-    setTimeout(() => {
-      setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id));
-    }, duration);
-  }, [duration]);
+      setTimeout(() => {
+        setRipples((prev) =>
+          prev.filter((ripple) => ripple.id !== newRipple.id)
+        );
+      }, duration);
+    },
+    [duration]
+  );
 
-  const rippleElements = ripples.map(ripple => (
+  const rippleElements = ripples.map((ripple) => (
     <Ripple
       key={ripple.id}
       x={ripple.x}
@@ -128,9 +138,4 @@ export const useRipple = (
   ));
 
   return { addRipple, rippleElements };
-}; 
-
-
-
-
-
+};

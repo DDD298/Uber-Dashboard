@@ -49,7 +49,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
               "accessToken=; Max-Age=0; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
           }
 
-          router.push("/auth/login");
+          router.push("/admin/login");
         }
       }
     }
@@ -64,7 +64,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       const hasProfile = localStorage.getItem("userProfile");
 
       if (!hasToken && !hasProfile && !isLoadingProfile) {
-        router.push("/auth/login");
+        router.push("/admin/login");
       }
     };
 

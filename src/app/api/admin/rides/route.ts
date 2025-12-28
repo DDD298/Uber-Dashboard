@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - List rides with advanced filters
 export async function GET(request: NextRequest) {
@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build WHERE conditions
-    let conditions = [];
-    let values: any[] = [];
+    const conditions: string[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (status !== "all") {
@@ -65,14 +65,14 @@ export async function GET(request: NextRequest) {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     // Get total count
-    const countResult = await sql(
+    const countResult = await executeSql<{ total: string }>(
       `SELECT COUNT(*) as total FROM rides r ${whereClause}`,
       values
     );
     const total = parseInt(countResult[0].total);
 
     // Get rides with driver and user info
-    const rides = await sql(
+    const rides = await executeSql(
       `SELECT 
         r.*,
         json_build_object(
@@ -88,8 +88,7 @@ export async function GET(request: NextRequest) {
         json_build_object(
           'clerk_id', u.clerk_id,
           'name', u.name,
-          'email', u.email,
-          'phone', u.phone
+          'email', u.email
         ) as user,
         CASE 
           WHEN rat.id IS NOT NULL THEN json_build_object(
@@ -121,9 +120,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
       ride_status = "confirmed",
     } = body;
 
-    const result = await sql(
+    const result = await executeSql(
       `INSERT INTO rides (
         origin_address, destination_address,
         origin_latitude, origin_longitude,
@@ -183,9 +183,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

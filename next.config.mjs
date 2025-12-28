@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   
-  // Proxy configuration for API calls
   async rewrites() {
     return [
       {
@@ -12,7 +11,6 @@ const nextConfig = {
     ];
   },
 
-  // Image optimization
   images: {
     remotePatterns: [
       {
@@ -22,7 +20,6 @@ const nextConfig = {
     ],
   },
   
-  // Empty turbopack config to silence the warning
   turbopack: {},
 };
 

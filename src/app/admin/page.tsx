@@ -1,5 +1,5 @@
-import StatisticsPage from "@/components/StatisticsPage";
+import DashboardPage from "@/components/Dashboard";
 
 export default function MainPage() {
-  return <StatisticsPage />;
+  return <DashboardPage />;
 }

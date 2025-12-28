@@ -10,7 +10,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isLoginPage = pathname === "/admin/auth/login";
+  const isLoginPage = pathname === "/admin/login";
 
   return (
     <div suppressHydrationWarning>

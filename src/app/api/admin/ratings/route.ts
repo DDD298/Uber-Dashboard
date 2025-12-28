@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - List ratings with filters
 export async function GET(request: NextRequest) {
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build WHERE conditions
-    let conditions = [];
-    let values: any[] = [];
+    const conditions: string[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (driverId) {
@@ -55,14 +55,14 @@ export async function GET(request: NextRequest) {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     // Get total count
-    const countResult = await sql(
+    const countResult = await executeSql<{ total: string }>(
       `SELECT COUNT(*) as total FROM ratings rat ${whereClause}`,
       values
     );
     const total = parseInt(countResult[0].total);
 
     // Get ratings with related data
-    const ratings = await sql(
+    const ratings = await executeSql(
       `SELECT 
         rat.*,
         json_build_object(
@@ -105,9 +105,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -120,7 +121,7 @@ export async function POST(request: NextRequest) {
     const { ride_id, user_id, driver_id, stars, comment } = body;
 
     // Check if rating already exists
-    const existing = await sql(
+    const existing = await executeSql<{ id: number }>(
       `SELECT id FROM ratings WHERE ride_id = $1`,
       [ride_id]
     );
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await sql(
+    const result = await executeSql(
       `INSERT INTO ratings (ride_id, user_id, driver_id, stars, comment, created_at)
        VALUES ($1, $2, $3, $4, $5, NOW())
        RETURNING *`,
@@ -146,9 +147,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

@@ -17,39 +17,19 @@ export function formatTimestamp(timestamp: number): string {
 	const diff = now - timestamp;
 
 	if (diff < 60000) {
-		return "Just Now";
+		return "Vừa xong";
 	} else if (diff < 3600000) {
 		const minutes = Math.floor(diff / 60000);
-		return `${minutes} min${minutes > 1 ? "s" : ""}`;
+		return `${minutes} phút trước`;
 	} else if (diff < 86400000) {
 		const hours = Math.floor(diff / 3600000);
-		return `${hours} hour${hours > 1 ? "s" : ""}`;
+		return `${hours} giờ trước`;
 	} else {
 		const days = Math.floor(diff / 86400000);
-		return `${days} day${days > 1 ? "s" : ""}`;
+		return `${days} ngày trước`;
 	}
 }
 
-export function formatCurrency(value: number): string {
-	if (value === 0) return "$0.00";
-
-	if (Math.abs(value) < 0.01) {
-		return value < 0 ? "<-$0.01" : "<$0.01";
-	}
-
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
-	}).format(value);
-}
-
-export function gweiToEth(gweiValue: string | number): string {
-	const gwei = typeof gweiValue === "string" ? Number.parseFloat(gweiValue) : gweiValue;
-	const eth = gwei * 1e-9;
-	return eth.toFixed(9);
-}
 
 
 

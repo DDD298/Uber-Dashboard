@@ -1,234 +1,358 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { adminUserApi } from "@/api/admin-users";
-import { adminDriverApi } from "@/api/admin-drivers";
-import { adminOrderApi } from "@/api/admin-orders";
-import { adminPricingApi } from "@/api/admin-pricing";
-import { adminPromotionApi } from "@/api/admin-promotions";
-import { adminTicketApi } from "@/api/admin-tickets";
-import { adminReportApi } from "@/api/admin-reports";
 import { toast } from "react-toastify";
 
-// User Management
-export const useAdminUsers = (params: any) => {
-  return useQuery({
-    queryKey: ["admin", "users", params],
-    queryFn: () => adminUserApi.getUsers(params),
+// Types
+interface User {
+  clerk_id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  created_at: string;
+  total_rides: number;
+  completed_rides: number;
+  total_spent?: number;
+}
+
+interface UsersResponse {
+  success: boolean;
+  data: User[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+interface UserResponse {
+  success: boolean;
+  data: User;
+}
+
+interface CreateUserData {
+  clerk_id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+interface UpdateUserData {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+interface UsersQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}
+
+// Fetch users list
+export const useAdminUsers = (params: UsersQueryParams = {}) => {
+  const queryParams = new URLSearchParams();
+  
+  if (params.page) queryParams.append("page", params.page.toString());
+  if (params.limit) queryParams.append("limit", params.limit.toString());
+  if (params.search) queryParams.append("search", params.search);
+  if (params.role) queryParams.append("role", params.role);
+  if (params.sortBy) queryParams.append("sortBy", params.sortBy);
+  if (params.sortOrder) queryParams.append("sortOrder", params.sortOrder);
+
+  return useQuery<UsersResponse>({
+    queryKey: ["admin-users", params],
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/users?${queryParams.toString()}`);
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy danh sách người dùng");
+      }
+      return response.json();
+    },
   });
 };
 
-export const useUserDetails = (id: string) => {
-  return useQuery({
-    queryKey: ["admin", "users", id],
-    queryFn: () => adminUserApi.getUserDetails(id),
-    enabled: !!id,
+// Fetch single user by ID
+export const useGetUserById = (userId: string) => {
+  return useQuery<UserResponse>({
+    queryKey: ["admin-user", userId],
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/users/${userId}`);
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin người dùng");
+      }
+      return response.json();
+    },
+    enabled: !!userId,
   });
 };
 
-export const useBlockUser = () => {
+// Create user
+export const useCreateUser = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { blocked: boolean; reason: string } }) => adminUserApi.blockUser(id, data),
+    mutationFn: async (data: CreateUserData) => {
+      const response = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi tạo người dùng");
+      }
+
+      return response.json();
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success("User status updated");
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+  });
+};
+
+// Update user
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: UpdateUserData }) => {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi cập nhật người dùng");
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-user", variables.id] });
     },
   });
 };
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (id: string) => adminUserApi.deleteUser(id),
+    mutationFn: async (userId: string) => {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi xóa người dùng");
+      }
+
+      return response.json();
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success("User deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("Xóa người dùng thành công!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Lỗi khi xóa người dùng");
     },
   });
 };
 
-export const useCreateUser = () => {
+// Driver hooks
+interface Driver {
+  clerk_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number?: string;
+  license_plate?: string;
+  vehicle_type?: string;
+  vehicle_model?: string;
+  vehicle_year?: number;
+  average_rating?: number;
+  rating_count?: number;
+  total_rides?: number;
+  total_earnings?: number;
+  active?: boolean;
+  created_at?: string;
+}
+
+interface DriversResponse {
+  success: boolean;
+  data: Driver[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+interface DriverResponse {
+  success: boolean;
+  data: Driver;
+}
+
+interface CreateDriverData {
+  clerk_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number?: string;
+  license_plate?: string;
+  vehicle_type?: string;
+  vehicle_model?: string;
+  vehicle_year?: number;
+}
+
+interface UpdateDriverData {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone_number?: string;
+  license_plate?: string;
+  vehicle_type?: string;
+  vehicle_model?: string;
+  vehicle_year?: number;
+  active?: boolean;
+}
+
+// Fetch drivers list
+export const useAdminDrivers = (params: UsersQueryParams = {}) => {
+  const queryParams = new URLSearchParams();
+  
+  if (params.page) queryParams.append("page", params.page.toString());
+  if (params.limit) queryParams.append("limit", params.limit.toString());
+  if (params.search) queryParams.append("search", params.search);
+  if (params.sortBy) queryParams.append("sortBy", params.sortBy);
+  if (params.sortOrder) queryParams.append("sortOrder", params.sortOrder);
+
+  return useQuery<DriversResponse>({
+    queryKey: ["admin-drivers", params],
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/drivers?${queryParams.toString()}`);
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy danh sách tài xế");
+      }
+      return response.json();
+    },
+  });
+};
+
+// Fetch single driver by ID
+export const useGetDriverById = (driverId: string) => {
+  return useQuery<DriverResponse>({
+    queryKey: ["admin-driver", driverId],
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/drivers/${driverId}`);
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin tài xế");
+      }
+      return response.json();
+    },
+    enabled: !!driverId,
+  });
+};
+
+// Create driver
+export const useCreateDriver = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (data: any) => adminUserApi.createUser(data),
+    mutationFn: async (data: CreateDriverData) => {
+      const response = await fetch("/api/admin/drivers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi tạo tài xế");
+      }
+
+      return response.json();
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success("User created successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-drivers"] });
+      toast.success("Tạo tài xế thành công!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Lỗi khi tạo tài xế");
     },
   });
 };
 
-export const useUpdateUser = () => {
+// Update driver
+export const useUpdateDriver = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => adminUserApi.updateUser(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success("User updated successfully");
+    mutationFn: async ({ id, data }: { id: string; data: UpdateDriverData }) => {
+      const response = await fetch(`/api/admin/drivers/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi cập nhật tài xế");
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-drivers"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-driver", variables.id] });
+      toast.success("Cập nhật tài xế thành công!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Lỗi khi cập nhật tài xế");
     },
   });
 };
 
-// Alias for consistency with other components
-export const useGetUserById = useUserDetails;
-
-
-// Driver Management
-export const useAdminDrivers = (params: any) => {
-  return useQuery({
-    queryKey: ["admin", "drivers", params],
-    queryFn: () => adminDriverApi.getDrivers(params),
-  });
-};
-
-export const useApproveDriver = () => {
+// Delete driver
+export const useDeleteDriver = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (data: { driverId: string; action: 'APPROVE' | 'REJECT' }) => adminDriverApi.approveDriver(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "drivers"] });
-      toast.success("Driver approval processed");
+    mutationFn: async (driverId: string) => {
+      const response = await fetch(`/api/admin/drivers/${driverId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi xóa tài xế");
+      }
+
+      return response.json();
     },
-  });
-};
-
-// Order Management
-export const useAdminOrders = (params: any) => {
-  return useQuery({
-    queryKey: ["admin", "orders", params],
-    queryFn: () => adminOrderApi.getOrders(params),
-  });
-};
-
-export const useOrderDetails = (id: string) => {
-  return useQuery({
-    queryKey: ["admin", "orders", id],
-    queryFn: () => adminOrderApi.getOrderDetails(id),
-    enabled: !!id,
-  });
-};
-
-export const useCancelOrder = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) => adminOrderApi.cancelOrder(id, reason),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
-      toast.success("Order cancelled by admin");
+      queryClient.invalidateQueries({ queryKey: ["admin-drivers"] });
+      toast.success("Xóa tài xế thành công!");
     },
-  });
-};
-
-// Pricing Config
-export const usePricing = () => {
-  return useQuery({
-    queryKey: ["admin", "pricing"],
-    queryFn: () => adminPricingApi.getPricing(),
-  });
-};
-
-export const useUpdatePricing = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (data: any) => adminPricingApi.updatePricing(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "pricing"] });
-      toast.success("Pricing configuration updated");
+    onError: (error: Error) => {
+      toast.error(error.message || "Lỗi khi xóa tài xế");
     },
-  });
-};
-
-// Promotion Management
-export const useAdminPromotions = (params?: any) => {
-  return useQuery({
-    queryKey: ["admin", "promotions", params],
-    queryFn: () => adminPromotionApi.getPromotions(params),
-  });
-};
-
-export const useCreatePromotion = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (data: any) => adminPromotionApi.createPromotion(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "promotions"] });
-      toast.success("Promotion created successfully");
-    },
-  });
-};
-
-export const useUpdatePromotion = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => adminPromotionApi.updatePromotion(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "promotions"] });
-      toast.success("Promotion updated successfully");
-    },
-  });
-};
-
-export const useDeletePromotion = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => adminPromotionApi.deletePromotion(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "promotions"] });
-      toast.success("Promotion deleted successfully");
-    },
-  });
-};
-
-// Ticket & Complaint Handling
-export const useAdminTickets = (params: any) => {
-  return useQuery({
-    queryKey: ["admin", "tickets", params],
-    queryFn: () => adminTicketApi.getTickets(params),
-  });
-};
-
-export const useTicketDetails = (id: string) => {
-  return useQuery({
-    queryKey: ["admin", "tickets", id],
-    queryFn: () => adminTicketApi.getTicketDetails(id),
-    enabled: !!id,
-  });
-};
-
-export const useAssignTicket = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, assignedTo }: { id: string; assignedTo: string }) => adminTicketApi.assignTicket(id, assignedTo),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "tickets"] });
-      toast.success("Ticket assigned successfully");
-    },
-  });
-};
-
-export const useUpdateTicketStatus = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { status: string; resolution: string } }) => adminTicketApi.updateTicketStatus(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "tickets"] });
-      toast.success("Ticket status updated");
-    },
-  });
-};
-
-// Dashboard & Reports
-export const useDashboardOverview = () => {
-  return useQuery({
-    queryKey: ["admin", "dashboard"],
-    queryFn: () => adminReportApi.getDashboard(),
-  });
-};
-
-export const useAdminReports = (type: string) => {
-  return useQuery({
-    queryKey: ["admin", "reports", type],
-    queryFn: () => adminReportApi.getReports(type),
-    enabled: !!type,
   });
 };
 

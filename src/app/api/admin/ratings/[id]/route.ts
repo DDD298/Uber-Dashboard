@@ -1,22 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - Get single rating
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const ratingId = parseInt(params.id);
 
-    const ratings = await sql(
+    const ratings = await executeSql(
       `SELECT 
         rat.*,
         json_build_object(
           'driver_id', d.id,
           'first_name', d.first_name,
           'last_name', d.last_name,
-          'email', d.email,
           'profile_image_url', d.profile_image_url,
           'average_rating', d.average_rating,
           'rating_count', d.rating_count
@@ -24,8 +23,7 @@ export async function GET(
         json_build_object(
           'clerk_id', u.clerk_id,
           'name', u.name,
-          'email', u.email,
-          'phone', u.phone
+          'email', u.email
         ) as user,
         json_build_object(
           'ride_id', r.ride_id,
@@ -54,9 +52,10 @@ export async function GET(
       success: true,
       data: ratings[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -73,7 +72,7 @@ export async function PATCH(
     const { stars, comment } = body;
 
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: (string | number)[] = [];
     let paramIndex = 1;
 
     if (stars !== undefined) {
@@ -94,7 +93,7 @@ export async function PATCH(
 
     values.push(ratingId);
 
-    const result = await sql(
+    const result = await executeSql(
       `UPDATE ratings
        SET ${updates.join(", ")}
        WHERE id = $${paramIndex}
@@ -113,9 +112,10 @@ export async function PATCH(
       success: true,
       data: result[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -123,13 +123,13 @@ export async function PATCH(
 
 // DELETE - Delete rating
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const ratingId = parseInt(params.id);
 
-    const result = await sql(
+    const result = await executeSql(
       `DELETE FROM ratings WHERE id = $1 RETURNING *`,
       [ratingId]
     );
@@ -145,9 +145,10 @@ export async function DELETE(
       success: true,
       message: "Rating deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

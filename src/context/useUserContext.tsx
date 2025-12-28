@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { clearToken, setTokenToLocalStorage } from "@/utils/tokenStorage";
 import { IProfileResponse } from "@/interface/response/auth";
 import { QueryClient } from "@tanstack/react-query";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +25,6 @@ const UserContext = createContext<UserContextType | null>(null);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [user, setUser] = useState<null | Record<string, any>>(null);
   const [profile, setProfile] = useState<IProfileResponse | null>(null);
@@ -160,7 +159,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("token");
     }
-    router.push("/auth/login");
+    router.push("/admin/login");
     queryClient.clear();
   };
 

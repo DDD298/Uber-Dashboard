@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useAdminTickets, useUpdateTicketStatus } from "@/hooks/useAdmin";
 import {
@@ -9,12 +11,22 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { formatRelativeTime, getStatusVariant, getPriorityVariant } from "@/lib/formatters";
+import {
+  formatRelativeTime,
+  getStatusVariant,
+  getPriorityVariant,
+} from "@/lib/formatters";
 import { Input } from "@/components/ui/input";
 import { IconSearch, IconX } from "@tabler/icons-react";
 
@@ -24,7 +36,11 @@ export default function TicketsPage() {
   const [currentPage] = useState(1);
   const pageSize = 10;
 
-  const { data: ticketsData, isLoading, refetch } = useAdminTickets({
+  const {
+    data: ticketsData,
+    isLoading,
+    refetch,
+  } = useAdminTickets({
     status: statusFilter,
     page: currentPage,
     limit: pageSize,
@@ -56,7 +72,7 @@ export default function TicketsPage() {
   const displayTickets = ticketsData?.data || [];
 
   return (
-    <div className="space-y-6 bg-white p-4 rounded-lg border border-lightBorderV1">
+    <div className="space-y-6 bg-[#eee] p-4 rounded-lg border border-lightBorderV1">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -124,7 +140,10 @@ export default function TicketsPage() {
           ) : (
             <div className="space-y-4">
               {displayTickets.map((ticket: any) => (
-                <Card key={ticket._id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={ticket._id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
@@ -132,7 +151,11 @@ export default function TicketsPage() {
                           <CardTitle className="text-lg">
                             #{ticket._id?.slice(-6)}
                           </CardTitle>
-                          <Badge variant={getPriorityVariant(ticket.priority || "LOW")}>
+                          <Badge
+                            variant={getPriorityVariant(
+                              ticket.priority || "LOW"
+                            )}
+                          >
                             {ticket.priority || "LOW"}
                           </Badge>
                         </div>
@@ -161,15 +184,16 @@ export default function TicketsPage() {
                         Assign
                       </Button>
                     )}
-                    {ticket.status !== "RESOLVED" && ticket.status !== "CLOSED" && (
-                      <Button
-                        variant="default"
-                        size="sm"
-                        onClick={() => handleResolve(ticket._id)}
-                      >
-                        Mark Resolved
-                      </Button>
-                    )}
+                    {ticket.status !== "RESOLVED" &&
+                      ticket.status !== "CLOSED" && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => handleResolve(ticket._id)}
+                        >
+                          Mark Resolved
+                        </Button>
+                      )}
                     <Button variant="ghost" size="sm">
                       View Details
                     </Button>

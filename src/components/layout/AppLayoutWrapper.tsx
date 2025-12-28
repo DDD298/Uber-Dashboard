@@ -11,10 +11,7 @@ export default function AppLayoutWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isLoginPage =
-    pathname?.includes("/auth/login") ||
-    pathname?.includes("/admin/auth/login") ||
-    pathname?.includes("/auth/register");
+  const isLoginPage = pathname?.includes("/admin/login");
 
   return isLoginPage ? (
     <CustomScrollArea className="h-full">{children}</CustomScrollArea>

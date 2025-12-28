@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useAdminUsers, useDeleteUser } from "@/hooks/useAdmin";
 import {
@@ -7,11 +9,17 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UserTable } from "@/components/UserPage/UserTable";
 import { UserCreateDialog } from "@/components/UserPage/UserCreateDialog";
 import { UserDetailsDialog } from "@/components/UserPage/UserDetailsDialog";
@@ -32,12 +40,16 @@ export default function UserPage() {
   const [pageSize] = useState(10);
 
   const roleParam = roleFilter && roleFilter !== "all" ? roleFilter : undefined;
-  
-  const { data: usersData, isLoading, refetch } = useAdminUsers({
+
+  const {
+    data: usersData,
+    isLoading,
+    refetch,
+  } = useAdminUsers({
     search: searchQuery,
     role: roleParam,
     page: currentPage,
-    limit: pageSize
+    limit: pageSize,
   });
   const { mutate: deleteUserMutation, isPending: isDeleting } = useDeleteUser();
 
@@ -85,16 +97,18 @@ export default function UserPage() {
   };
 
   const displayUsers = usersData?.data || [];
+  const pagination = usersData?.pagination;
+
   return (
-    <div className="space-y-6 bg-white p-4 rounded-lg border border-lightBorderV1">
+    <div className="space-y-6 bg-[#eee] p-4 rounded-lg border border-lightBorderV1">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href="/admin">Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>User Management</BreadcrumbPage>
+            <BreadcrumbPage>Quản lý người dùng</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -107,7 +121,7 @@ export default function UserPage() {
           <div className="flex items-center justify-between gap-4 w-full md:w-auto">
             <div className="relative w-full md:w-96">
               <Input
-                placeholder="Search by name, email, role, department..."
+                placeholder="Tìm kiếm theo tên hoặc email..."
                 value={searchQuery}
                 onChange={handleSearch}
                 className="pl-10 pr-10 py-2 w-full border-lightBorderV1 focus:border-mainTextHoverV1 text-gray-800"
@@ -124,7 +138,7 @@ export default function UserPage() {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
+              {/* <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
                 <SelectTrigger className="w-[180px] focus:border-mainTextHoverV1">
                   <SelectValue placeholder="Filter by role" />
                 </SelectTrigger>
@@ -134,13 +148,13 @@ export default function UserPage() {
                   <SelectItem value="CUSTOMER">Customer</SelectItem>
                   <SelectItem value="DRIVER">Driver</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
               <Button
                 onClick={() => setIsCreateDialogOpen(true)}
                 className="bg-mainTextHoverV1 hover:bg-primary/90 text-white"
               >
                 <IconPlus className="h-4 w-4" />
-                Add User
+                Thêm người dùng
               </Button>
             </div>
           </div>
@@ -163,7 +177,7 @@ export default function UserPage() {
             ) : (
               <UserTable
                 users={displayUsers}
-                isSearching={false}
+                isSearching={!!searchQuery}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 currentPage={currentPage}
@@ -171,12 +185,12 @@ export default function UserPage() {
               />
             )}
           </Card>
-          {usersData?.meta?.total && usersData.meta.total > pageSize && (
+          {pagination && pagination.total > pageSize && (
             <Pagination
               page={currentPage}
               pageSize={pageSize}
-              total={usersData.meta.total}
-              totalPages={Math.ceil(usersData.meta.total / pageSize)}
+              total={pagination.total}
+              totalPages={pagination.totalPages}
               onPageChange={handlePageChange}
             />
           )}
@@ -187,12 +201,12 @@ export default function UserPage() {
         isDeleting={isDeleting}
         onClose={() => setIsDeleteDialogOpen(false)}
         onConfirm={confirmDelete}
-        title="Delete User"
-        description="Are you sure you want to delete this user? This action cannot be undone."
-        confirmText="Delete User"
-        successMessage="User deleted successfully!"
-        errorMessage="Failed to delete user."
-        warningMessage="This will permanently remove the user and all associated data."
+        title="Xóa người dùng"
+        description="Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể được hoàn tác."
+        confirmText="Xóa người dùng"
+        successMessage="Xóa người dùng thành công!"
+        errorMessage="Lỗi khi xóa người dùng."
+        warningMessage="Điều này sẽ vĩnh viễn xóa người dùng và tất cả dữ liệu liên quan."
       />
 
       <UserCreateDialog
@@ -214,9 +228,4 @@ export default function UserPage() {
       )}
     </div>
   );
-} 
-
-
-
-
-
+}

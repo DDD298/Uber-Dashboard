@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - Get single user
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const users = await sql(
+    const users = await executeSql(
       `SELECT 
         u.*,
         (SELECT COUNT(*) FROM rides WHERE user_id = u.clerk_id) as total_rides,
@@ -29,9 +29,10 @@ export async function GET(
       success: true,
       data: users[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -46,7 +47,7 @@ export async function PATCH(
     const body = await request.json();
     const { name, email, phone } = body;
 
-    const result = await sql(
+    const result = await executeSql(
       `UPDATE users
        SET 
          name = COALESCE($1, name),
@@ -68,21 +69,21 @@ export async function PATCH(
       success: true,
       data: result[0],
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
 }
 
-// DELETE - Delete user
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const result = await sql(
+    const result = await executeSql(
       `DELETE FROM users WHERE clerk_id = $1 RETURNING *`,
       [params.id]
     );
@@ -98,9 +99,10 @@ export async function DELETE(
       success: true,
       message: "User deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

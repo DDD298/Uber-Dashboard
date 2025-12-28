@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 // GET - List all users with pagination, search, filter
 export async function GET(request: NextRequest) {
@@ -13,18 +13,23 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
+    // Validate sortBy to prevent SQL injection
+    const allowedSortFields = ["clerk_id", "name", "email"];
+    const safeSortBy = allowedSortFields.includes(sortBy) ? sortBy : "clerk_id";
+    const safeSortOrder = sortOrder.toUpperCase() === "ASC" ? "ASC" : "DESC";
+
     // Build search condition
     let searchCondition = "";
-    let searchValues: any[] = [];
+    const searchValues: (string | number)[] = [];
     
     if (search) {
       searchCondition = "WHERE name ILIKE $1 OR email ILIKE $1";
-      searchValues = [`%${search}%`];
+      searchValues.push(`%${search}%`);
     }
 
     // Get total count
     const countQuery = `SELECT COUNT(*) as total FROM users ${searchCondition}`;
-    const countResult = await sql(countQuery, searchValues);
+    const countResult = await executeSql<{ total: string }>(countQuery, searchValues);
     const total = parseInt(countResult[0].total);
 
     // Get users
@@ -33,18 +38,16 @@ export async function GET(request: NextRequest) {
         clerk_id,
         name,
         email,
-        phone,
-        created_at,
         (SELECT COUNT(*) FROM rides WHERE user_id = users.clerk_id) as total_rides,
         (SELECT COUNT(*) FROM rides WHERE user_id = users.clerk_id AND ride_status = 'completed') as completed_rides
       FROM users
       ${searchCondition}
-      ORDER BY ${sortBy} ${sortOrder}
+      ORDER BY ${safeSortBy} ${safeSortOrder}
       LIMIT $${searchValues.length + 1}
       OFFSET $${searchValues.length + 2}
     `;
     
-    const users = await sql(usersQuery, [...searchValues, limit, offset]);
+    const users = await executeSql(usersQuery, [...searchValues, limit, offset]);
 
     return NextResponse.json({
       success: true,
@@ -56,9 +59,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
@@ -68,13 +72,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { clerk_id, name, email, phone } = body;
+    const { clerk_id, name, email } = body;
 
-    const result = await sql(
-      `INSERT INTO users (clerk_id, name, email, phone, created_at)
-       VALUES ($1, $2, $3, $4, NOW())
+    const result = await executeSql(
+      `INSERT INTO users (clerk_id, name, email)
+       VALUES ($1, $2, $3)
        RETURNING *`,
-      [clerk_id, name, email, phone || null]
+      [clerk_id, name, email]
     );
 
     return NextResponse.json(
@@ -84,9 +88,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

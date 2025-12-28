@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { executeSql } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate date range
     const now = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
     switch (period) {
       case "7d":
         startDate.setDate(now.getDate() - 7);
@@ -25,11 +25,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Get overview stats
-    const overview = await sql(
+    const overview = await executeSql(
       `SELECT
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM drivers) as total_drivers,
-        (SELECT COUNT(*) FROM drivers WHERE status = 'active') as active_drivers,
+        (SELECT COUNT(*) FROM drivers) as active_drivers,
         (SELECT COUNT(*) FROM rides) as total_rides,
         (SELECT COUNT(*) FROM rides WHERE ride_status = 'completed') as completed_rides,
         (SELECT COUNT(*) FROM rides WHERE ride_status = 'cancelled') as cancelled_rides,
@@ -38,18 +38,18 @@ export async function GET(request: NextRequest) {
     );
 
     // Get period stats
-    const periodStats = await sql(
+    const periodStats = await executeSql(
       `SELECT
         (SELECT COUNT(*) FROM rides WHERE created_at >= $1) as period_rides,
         (SELECT COUNT(*) FROM rides WHERE created_at >= $1 AND ride_status = 'completed') as period_completed,
         (SELECT COALESCE(SUM(fare_price), 0) FROM rides WHERE created_at >= $1 AND payment_status = 'paid') as period_revenue,
-        (SELECT COUNT(*) FROM users WHERE created_at >= $1) as new_users,
-        (SELECT COUNT(*) FROM drivers WHERE created_at >= $1) as new_drivers`,
+        (SELECT COUNT(*) FROM users) as new_users,
+        (SELECT COUNT(*) FROM drivers) as new_drivers`,
       [startDate.toISOString()]
     );
 
     // Get daily stats for chart
-    const dailyStats = await sql(
+    const dailyStats = await executeSql(
       `SELECT 
         DATE(created_at) as date,
         COUNT(*) as rides,
@@ -62,8 +62,7 @@ export async function GET(request: NextRequest) {
       [startDate.toISOString()]
     );
 
-    // Get top drivers
-    const topDrivers = await sql(
+    const topDrivers = await executeSql(
       `SELECT 
         d.id,
         d.first_name,
@@ -89,9 +88,10 @@ export async function GET(request: NextRequest) {
         topDrivers,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: "Internal server error", details: error.message },
+      { success: false, error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

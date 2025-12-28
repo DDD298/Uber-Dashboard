@@ -80,17 +80,22 @@ export default function LoginPage() {
         return;
       }
 
-      // Save token to localStorage
+      // Save token and user data to localStorage
       if (data.data?.accessToken) {
         localStorage.setItem("token", data.data.accessToken);
         localStorage.setItem("accessToken", data.data.accessToken);
         localStorage.setItem("userProfile", JSON.stringify(data.data));
+
+        if (data.data.user) {
+          localStorage.setItem("user", JSON.stringify(data.data.user));
+        }
       }
 
       toast.success(data.message || "Login successful!");
 
-      // Redirect to admin dashboard
-      router.push("/admin");
+      setTimeout(() => {
+        router.push("/admin");
+      }, 100);
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error(error?.message || "Login failed");
@@ -134,13 +139,6 @@ export default function LoginPage() {
                 <p className="text-gray-500 text-sm">
                   Sign in to access the Uber admin dashboard
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-left">
-                  <p className="font-semibold text-blue-800 mb-1">
-                    Demo Credentials:
-                  </p>
-                  <p className="text-blue-600">Email: adminuber@gmail.com</p>
-                  <p className="text-blue-600">Password: Admin123!</p>
-                </div>
               </div>
 
               {/* Form */}
@@ -154,7 +152,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="email"
-                    className="text-xs text-gray-500 uppercase tracking-wide"
+                    className="text-sm text-gray-500 uppercase tracking-wide"
                   >
                     Admin Email
                   </Label>
@@ -168,14 +166,14 @@ export default function LoginPage() {
                     className="border-0 border-b-2 border-gray-200 rounded-none px-0 focus-visible:ring-0 focus-visible:border-[#41C651]"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
                   <Label
                     htmlFor="password"
-                    className="text-xs text-gray-500 uppercase tracking-wide"
+                    className="text-sm text-gray-500 uppercase tracking-wide"
                   >
                     Password
                   </Label>
@@ -203,7 +201,7 @@ export default function LoginPage() {
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-500 text-sm mt-1">
                       {errors.password}
                     </p>
                   )}
@@ -243,7 +241,7 @@ export default function LoginPage() {
 
                 {/* Security Notice */}
                 <div className="text-center pt-4 border-t border-gray-200">
-                  <div className="text-xs flex items-center justify-center gap-2 text-gray-500">
+                  <div className="text-sm flex items-center justify-center gap-2 text-gray-500">
                     <Lock1 size="16" color="#7F8788" />
                     <span>
                       Secure admin access only · Contact support if you need

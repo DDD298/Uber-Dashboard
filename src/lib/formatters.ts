@@ -56,3 +56,29 @@ export function getPriorityVariant(priority: string): "default" | "destructive" 
   };
   return variants[priority] || 'default';
 }
+
+// Format currency with compact notation (e.g., 1.5M, 2.3B)
+export function formatCurrencyCompact(amount: number): string {
+  if (amount >= 1000000000000) {
+    return `₫${(amount / 1000000000000).toFixed(1)}T`;
+  } else if (amount >= 1000000000) {
+    return `₫${(amount / 1000000000).toFixed(1)}B`;
+  } else if (amount >= 1000000) {
+    return `₫${(amount / 1000000).toFixed(1)}M`;
+  } else if (amount >= 1000) {
+    return `₫${(amount / 1000).toFixed(0)}K`;
+  } else {
+    return `₫${amount.toFixed(0)}`;
+  }
+}
+
+// Format currency without symbol
+export function formatCurrencyNoSymbol(amount: number): string {
+  return new Intl.NumberFormat('vi-VN').format(amount);
+}
+
+// Format number with thousand separators
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat('vi-VN').format(num);
+}
+
