@@ -4,10 +4,11 @@ import { executeSql } from "@/lib/db";
 // GET - Get single rating
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const ratingId = parseInt(params.id);
+    const ratingId = parseInt(id);
 
     const ratings = await executeSql(
       `SELECT 
@@ -64,10 +65,11 @@ export async function GET(
 // PATCH - Update rating
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const ratingId = parseInt(params.id);
+    const ratingId = parseInt(id);
     const body = await request.json();
     const { stars, comment } = body;
 
@@ -124,10 +126,11 @@ export async function PATCH(
 // DELETE - Delete rating
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const ratingId = parseInt(params.id);
+    const ratingId = parseInt(id);
 
     const result = await executeSql(
       `DELETE FROM ratings WHERE id = $1 RETURNING *`,

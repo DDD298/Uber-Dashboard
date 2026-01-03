@@ -13,13 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { UserTable } from "@/components/UserPage/UserTable";
 import { UserCreateDialog } from "@/components/UserPage/UserCreateDialog";
 import { UserDetailsDialog } from "@/components/UserPage/UserDetailsDialog";
@@ -68,10 +62,6 @@ export default function UserPage() {
 
   const handleClearSearch = () => {
     setSearchQuery("");
-  };
-
-  const handleRoleFilterChange = (value: string) => {
-    setRoleFilter(value);
   };
 
   const handleEdit = (id: string) => {

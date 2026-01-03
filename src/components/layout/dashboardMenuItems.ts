@@ -4,9 +4,7 @@ import {
 	mdiAccountGroup,
 	mdiCarSide,
 	mdiMapMarkerPath,
-	mdiStar,
 	mdiTicket,
-	mdiMessageText,
 } from "@mdi/js";
 
 export const getDashboardMenuItems = (): MenuItem[] => [

@@ -4,10 +4,11 @@ import { executeSql } from "@/lib/db";
 // GET - Get single ride with full details
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const rideId = parseInt(params.id);
+    const rideId = parseInt(id);
 
     const rides = await executeSql(
       `SELECT 
@@ -67,10 +68,11 @@ export async function GET(
 // PATCH - Update ride
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const rideId = parseInt(params.id);
+    const rideId = parseInt(id);
     const body = await request.json();
     const { ride_status, payment_status, cancel_reason, fare_price } = body;
 
@@ -141,10 +143,11 @@ export async function PATCH(
 // DELETE - Delete ride
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const rideId = parseInt(params.id);
+    const rideId = parseInt(id);
 
     // Check if ride has rating
     const ratingCheck = await executeSql<{ id: number }>(

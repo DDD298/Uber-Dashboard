@@ -4,10 +4,11 @@ import { executeSql } from "@/lib/db";
 // GET - Get single warning
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const warningId = parseInt(params.id);
+    const warningId = parseInt(id);
 
     const warnings = await executeSql(
       `SELECT 
@@ -62,10 +63,11 @@ export async function GET(
 // PATCH - Update warning (resolve, add notes)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const warningId = parseInt(params.id);
+    const warningId = parseInt(id);
     const body = await request.json();
     const { resolved_by, notes, action_taken } = body;
 
@@ -119,10 +121,11 @@ export async function PATCH(
 // DELETE - Delete warning
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const warningId = parseInt(params.id);
+    const warningId = parseInt(id);
 
     const result = await executeSql<{ driver_id: number }>(
       `DELETE FROM driver_warnings WHERE id = $1 RETURNING *`,

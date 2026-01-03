@@ -4,8 +4,9 @@ import { executeSql } from "@/lib/db";
 // GET - Get single user
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const users = await executeSql(
       `SELECT 
@@ -15,7 +16,7 @@ export async function GET(
         (SELECT SUM(fare_price) FROM rides WHERE user_id = u.clerk_id AND payment_status = 'paid') as total_spent
       FROM users u
       WHERE clerk_id = $1`,
-      [params.id]
+      [id]
     );
 
     if (users.length === 0) {
@@ -41,8 +42,9 @@ export async function GET(
 // PATCH - Update user
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const body = await request.json();
     const { name, email, phone } = body;
@@ -55,7 +57,7 @@ export async function PATCH(
          phone = COALESCE($3, phone)
        WHERE clerk_id = $4
        RETURNING *`,
-      [name, email, phone, params.id]
+      [name, email, phone, id]
     );
 
     if (result.length === 0) {
@@ -80,12 +82,13 @@ export async function PATCH(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const result = await executeSql(
       `DELETE FROM users WHERE clerk_id = $1 RETURNING *`,
-      [params.id]
+      [id]
     );
 
     if (result.length === 0) {

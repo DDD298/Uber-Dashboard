@@ -4,10 +4,10 @@ import { executeSql } from '@/lib/db';
 // GET /api/admin/promo-codes/[id] - Lấy chi tiết mã giảm giá
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const { id } = params;
     
     const result = await executeSql(
       'SELECT * FROM promo_codes WHERE id = $1',
@@ -37,10 +37,10 @@ export async function GET(
 // PUT /api/admin/promo-codes/[id] - Cập nhật mã giảm giá
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const { id } = params;
     const body = await request.json();
     
     const {
@@ -158,10 +158,10 @@ export async function PUT(
 // DELETE /api/admin/promo-codes/[id] - Xóa mã giảm giá
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const { id } = params;
     
     const result = await executeSql(
       'DELETE FROM promo_codes WHERE id = $1 RETURNING *',

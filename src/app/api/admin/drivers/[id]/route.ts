@@ -4,10 +4,11 @@ import { executeSql } from "@/lib/db";
 // GET - Get single driver with details
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const driverId = parseInt(params.id);
+    const driverId = parseInt(id);
 
     const drivers = await executeSql(
       `SELECT 
@@ -91,10 +92,11 @@ export async function GET(
 // PATCH - Update driver
 export async function PATCH(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const driverId = parseInt(params.id);
+    const driverId = parseInt(id);
     const body = await _request.json();
     const {
       first_name,
@@ -190,10 +192,11 @@ export async function PATCH(
 // DELETE - Delete driver
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const driverId = parseInt(params.id);
+    const driverId = parseInt(id);
 
     // Check if driver has any rides
     const ridesCount = await executeSql<{ count: string }>(

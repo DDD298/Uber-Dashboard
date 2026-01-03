@@ -34,7 +34,7 @@ interface DriverTableProps {
 export default function DriverTable({
   drivers,
   isLoading,
-  onEdit,
+  onEdit: _onEdit,
   onDelete,
   onView,
   pagination,

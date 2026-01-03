@@ -4,10 +4,11 @@ import { executeSql } from '@/lib/db';
 // POST /api/admin/drivers/[id]/approve - Duyệt hoặc từ chối tài xế
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
-    const driverId = parseInt(params.id);
+    const driverId = parseInt(id);
     const body = await request.json();
     const { approval_status, rejection_reason } = body;
 
