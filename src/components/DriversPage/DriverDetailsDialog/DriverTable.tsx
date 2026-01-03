@@ -23,7 +23,7 @@ export default function DriverTable({ driver }: DriverTableProps) {
           />
         </div>
         <div className="flex-1 pt-2">
-          <h3 className="text-xl font-bold text-gray-700">
+          <h3 className="text-xl font-semibold text-gray-700">
             {driver.first_name} {driver.last_name}
           </h3>
           <p className="text-gray-700 text-sm mt-1">

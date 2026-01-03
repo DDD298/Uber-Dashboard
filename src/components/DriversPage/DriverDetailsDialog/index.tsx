@@ -83,7 +83,7 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-700">
+                        <p className="text-2xl font-semibold text-gray-700">
                           {driver?.total_rides || 0}
                         </p>
                         <p className="text-sm text-gray-700 mt-1">
@@ -103,7 +103,7 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-700">
+                        <p className="text-2xl font-semibold text-gray-700">
                           {new Intl.NumberFormat("vi-VN", {
                             style: "currency",
                             currency: "VND",
@@ -127,7 +127,7 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-700">
+                        <p className="text-2xl font-semibold text-gray-700">
                           {driver?.average_rating
                             ? Number(driver.average_rating).toFixed(2)
                             : "N/A"}
@@ -149,7 +149,7 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-700">
+                        <p className="text-2xl font-semibold text-gray-700">
                           {driver?.rating_count || 0}
                         </p>
                         <p className="text-sm text-gray-700 mt-1">

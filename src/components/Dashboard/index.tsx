@@ -108,7 +108,7 @@ export default function DashboardPage() {
       {/* Dashboard Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-700 mb-1">
+          <h1 className="text-3xl font-semibold text-gray-700 mb-1">
             Tổng quan Dashboard
           </h1>
           <p className="text-base text-gray-700">

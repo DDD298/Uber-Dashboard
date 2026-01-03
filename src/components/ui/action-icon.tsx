@@ -15,7 +15,7 @@ interface ActionIconProps
 const getVariantClasses = (variant?: string): string => {
   switch (variant) {
     case "default":
-      return "bg-primary text-primary-foreground hover:bg-primary/90";
+      return "bg-primary text-green-600-foreground hover:bg-primary/90";
     case "destructive":
       return "bg-destructive text-destructive-foreground hover:bg-destructive/90";
     case "outline":
@@ -25,9 +25,9 @@ const getVariantClasses = (variant?: string): string => {
     case "ghost":
       return "hover:bg-accent hover:text-accent-foreground";
     case "link":
-      return "text-primary underline-offset-4 hover:underline";
+      return "text-green-600 underline-offset-4 hover:underline";
     default:
-      return "bg-primary text-primary-foreground hover:bg-primary/90";
+      return "bg-primary text-green-600-foreground hover:bg-primary/90";
   }
 };
 

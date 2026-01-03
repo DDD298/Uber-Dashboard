@@ -7,7 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { IconLoader2, IconTrash, IconAlertTriangle } from "@tabler/icons-react";
+import {
+  IconLoader2,
+  IconTrash,
+  IconAlertTriangle,
+  IconX,
+} from "@tabler/icons-react";
 import { toast } from "react-toastify";
 
 interface DeleteDialogProps {
@@ -29,8 +34,6 @@ export const DeleteDialog = ({
   onClose,
   onConfirm,
   title,
-  description,
-  confirmText,
   successMessage,
   errorMessage,
   warningMessage,
@@ -47,31 +50,34 @@ export const DeleteDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="!border-b-[#ccc] px-4">
+      <DialogContent className="sm:max-w-md p-0">
+        <DialogHeader className="!border-b-[#ccc] !p-4 !pb-3">
           <DialogTitle className="text-gray-700">{title}</DialogTitle>
         </DialogHeader>
 
-        {warningMessage && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="flex items-start gap-2">
-              <IconAlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-red-800">
-                <p className="font-semibold mb-1">Warning:</p>
-                <p>{warningMessage}</p>
+        <div className="px-4">
+          {warningMessage && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-start gap-2">
+                <IconAlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div className="text-sm text-red-800">
+                  <p className="font-semibold mb-1">Warning:</p>
+                  <p>{warningMessage}</p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        <DialogFooter className="flex gap-2 sm:gap-2">
+        <DialogFooter className="flex gap-2 sm:gap-2 px-4 pb-4">
           <Button
-            variant="outline"
+            className="flex-1"
+            variant="cancel"
             onClick={onClose}
             disabled={isDeleting}
-            className="flex-1 !bg-transparent"
           >
-            Cancel
+            <IconX className="h-4 w-4" />
+            Hủy thao tác
           </Button>
           <Button
             variant="destructive"
@@ -82,12 +88,12 @@ export const DeleteDialog = ({
             {isDeleting ? (
               <>
                 <IconLoader2 className="h-4 w-4 animate-spin" />
-                Deleting...
+                Đang xóa...
               </>
             ) : (
               <>
                 <IconTrash className="h-4 w-4" />
-                {confirmText}
+                Xóa
               </>
             )}
           </Button>

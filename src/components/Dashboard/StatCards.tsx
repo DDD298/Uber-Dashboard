@@ -77,7 +77,7 @@ const StatCard = ({
 
           {/* Main value */}
           <div>
-            <p className="text-3xl font-bold text-gray-700">{value}</p>
+            <p className="text-3xl font-semibold text-gray-700">{value}</p>
             {trendValue && (
               <div className="flex items-center gap-1.5 mt-auto pt-2">
                 <TrendingUp size={14} className="text-green-700" />

@@ -178,7 +178,7 @@ export default function RecentActivity() {
 
                 {/* Price */}
                 <div className="text-right flex-shrink-0">
-                  <div className="text-base font-bold text-green-700">
+                  <div className="text-base font-semibold text-green-700">
                     {formatCurrency(Number(ride.fare_price))}
                   </div>
                   <p className="text-sm text-gray-400 mt-0.5">

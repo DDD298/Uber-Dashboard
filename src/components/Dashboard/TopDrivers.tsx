@@ -48,7 +48,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
     <Card>
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold text-gray-700 mb-1">
+          <h3 className="text-xl font-semibold text-gray-700 mb-1">
             Tài xế hàng đầu
           </h3>
           <p className="text-sm text-gray-700">
@@ -77,7 +77,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
                 <div
                   className={`w-10 h-10 rounded-full ${getMedalColor(
                     index
-                  )} flex items-center justify-center text-white font-bold text-base shadow-sm flex-shrink-0`}
+                  )} flex items-center justify-center text-white font-semibold text-base shadow-sm flex-shrink-0`}
                 >
                   {index + 1}
                 </div>
@@ -119,7 +119,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
 
                 {/* Earnings */}
                 <div className="text-right flex-shrink-0">
-                  <p className="font-bold text-green-700 text-base">
+                  <p className="font-semibold text-green-700 text-base">
                     {formatCurrency(Number(driver.total_earnings))}
                   </p>
                   <p className="text-sm text-gray-400">thu nhập</p>
