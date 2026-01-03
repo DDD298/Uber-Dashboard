@@ -26,7 +26,8 @@ import type { IUser } from "@/interface/auth";
 
 export default function UserPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [roleFilter, setRoleFilter] = useState<string>("all");
+  // const [roleFilter, setRoleFilter] = useState<string>("all");
+  const roleFilter = "all";
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
