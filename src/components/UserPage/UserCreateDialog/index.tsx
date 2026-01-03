@@ -115,7 +115,7 @@ export const UserCreateDialog = ({
         className="max-h-[90vh] overflow-y-auto bg-white"
       >
         <DialogHeader>
-          <DialogTitle className="text-gray-800">Add New User</DialogTitle>
+          <DialogTitle className="text-gray-700">Add New User</DialogTitle>
         </DialogHeader>
 
         <motion.div
@@ -125,7 +125,7 @@ export const UserCreateDialog = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="clerk_id" className="text-gray-800">
+              <Label htmlFor="clerk_id" className="text-gray-700">
                 Clerk ID <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ export const UserCreateDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-800">
+              <Label htmlFor="name" className="text-gray-700">
                 Name <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -174,7 +174,7 @@ export const UserCreateDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-800">
+              <Label htmlFor="email" className="text-gray-700">
                 Email <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -194,7 +194,7 @@ export const UserCreateDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-gray-800">
+              <Label htmlFor="phone" className="text-gray-700">
                 Phone Number
               </Label>
               <Input

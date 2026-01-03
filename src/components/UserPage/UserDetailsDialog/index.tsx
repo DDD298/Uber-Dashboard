@@ -134,7 +134,7 @@ export const UserDetailsDialog = ({
         className="max-h-[90vh] overflow-y-auto bg-white"
       >
         <DialogHeader>
-          <DialogTitle className="text-gray-800">
+          <DialogTitle className="text-gray-700">
             {isEditing
               ? `Sửa thông tin người dùng: ${user.name}`
               : "Chi tiết người dùng"}
@@ -145,7 +145,7 @@ export const UserDetailsDialog = ({
           {isEditing ? (
             <>
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-800">
+                <Label htmlFor="name" className="text-gray-700">
                   Tên <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -164,7 +164,7 @@ export const UserDetailsDialog = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-800">
+                <Label htmlFor="email" className="text-gray-700">
                   Email <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -208,25 +208,25 @@ export const UserDetailsDialog = ({
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500">Clerk ID</p>
-                    <p className="font-semibold text-gray-800">
+                    <p className="text-sm text-gray-700">Clerk ID</p>
+                    <p className="font-semibold text-gray-700">
                       {user.clerk_id}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Tên</p>
-                    <p className="font-semibold text-gray-800">{user.name}</p>
+                    <p className="text-sm text-gray-700">Tên</p>
+                    <p className="font-semibold text-gray-700">{user.name}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-semibold text-gray-800">{user.email}</p>
+                    <p className="text-sm text-gray-700">Email</p>
+                    <p className="font-semibold text-gray-700">{user.email}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Tổng chuyến đi</p>
+                    <p className="text-sm text-gray-700">Tổng chuyến đi</p>
                     <Badge variant="blue">{user.total_rides || 0}</Badge>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-700">
                       Chuyến đi hoàn thành
                     </p>
                     <Badge variant="green">{user.completed_rides || 0}</Badge>

@@ -4,7 +4,7 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center border px-2.5 h-7 rounded-[6px] text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer w-fit text-nowrap",
+  "inline-flex items-center border px-2 py-0.5 rounded-[4px] text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer w-fit text-nowrap",
   {
     variants: {
       variant: {
@@ -14,7 +14,7 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80 text-nowrap",
         outline:
-          "text-foreground border h-[30px] px-3 !border-white/50 bg-transparent text-[#343A40] font-semibold !rounded-none rounded-full text-nowrap",
+          "text-foreground border h-[30px] px-3 !border-white/50 bg-transparent text-[#343A40] font-medium !rounded-none rounded-full text-nowrap",
         orange:
           "bg-green-500 hover:bg-green-600 text-white border-2 border-green-100 text-nowrap flex items-center gap-1",
         red: "bg-red-500 hover:bg-red-600 text-white border-2 border-red-100 text-nowrap flex items-center gap-1",
@@ -49,6 +49,13 @@ const badgeVariants = cva(
           "bg-neutral-500 hover:bg-neutral-600 text-white border-2 border-neutral-100 text-nowrap flex items-center gap-1",
         stone:
           "bg-stone-500 hover:bg-stone-600 text-white border-2 border-stone-100 text-nowrap flex items-center gap-1",
+        success:
+          "bg-green-100 border-green-400 text-green-700 hover:bg-green-200 border text-xs font-medium uppercase",
+        warning:
+          "bg-yellow-100 border-yellow-400 text-yellow-700 hover:bg-yellow-200 border text-xs font-medium uppercase",
+        info: "bg-blue-100 border-blue-400 text-blue-700 hover:bg-blue-200 border text-xs font-medium uppercase",
+        danger:
+          "bg-red-100 border-red-400 text-red-700 hover:bg-red-200 border text-xs font-medium uppercase",
       },
     },
     defaultVariants: {

@@ -45,13 +45,13 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
   };
 
   return (
-    <Card className="p-6 shadow-md">
+    <Card>
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold text-gray-900 mb-1">
+          <h3 className="text-xl font-bold text-gray-700 mb-1">
             Tài xế hàng đầu
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700">
             Thu nhập cao nhất trong kỳ này
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
 
       <div className="space-y-3">
         {drivers.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-gray-700">
             <p className="font-medium">Không có dữ liệu tài xế</p>
           </div>
         ) : (
@@ -94,7 +94,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
 
                 {/* Driver Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 text-sm truncate mb-1">
+                  <p className="font-semibold text-gray-700 text-sm truncate mb-1">
                     {driver.first_name} {driver.last_name}
                   </p>
                   <div className="flex items-center gap-2 text-sm">
@@ -111,7 +111,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
                       </span>
                     </div>
                     <span className="text-gray-400">•</span>
-                    <span className="text-gray-600">
+                    <span className="text-gray-700">
                       {driver.total_rides} chuyến
                     </span>
                   </div>

@@ -23,10 +23,10 @@ export default function DriverTable({ driver }: DriverTableProps) {
           />
         </div>
         <div className="flex-1 pt-2">
-          <h3 className="text-xl font-bold text-gray-900">
+          <h3 className="text-xl font-bold text-gray-700">
             {driver.first_name} {driver.last_name}
           </h3>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-700 text-sm mt-1">
             {driver.vehicle_type || "N/A"} Driver
           </p>
         </div>
@@ -34,7 +34,7 @@ export default function DriverTable({ driver }: DriverTableProps) {
 
       {/* Vehicle Information */}
       <div className="space-y-3">
-        <h4 className="font-semibold text-gray-900">Thông tin phương tiện</h4>
+        <h4 className="font-semibold text-gray-700">Thông tin phương tiện</h4>
 
         {/* Car Image */}
         {driver.car_image_url && (
@@ -51,14 +51,14 @@ export default function DriverTable({ driver }: DriverTableProps) {
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
             <IconCar className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-xs text-gray-500">Loại xe</p>
+              <p className="text-sm text-gray-700">Loại xe</p>
               <p className="font-medium">{driver.vehicle_type || "N/A"}</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
             <IconArmchair className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-xs text-gray-500">Số chỗ</p>
+              <p className="text-sm text-gray-700">Số chỗ</p>
               <p className="font-medium">{driver.car_seats || "N/A"}</p>
             </div>
           </div>

@@ -108,10 +108,10 @@ export default function DashboardPage() {
       {/* Dashboard Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">
+          <h1 className="text-3xl font-bold text-gray-700 mb-1">
             Tổng quan Dashboard
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-base text-gray-700">
             Thống kê thời gian thực cho nền tảng gọi xe
           </p>
         </div>

@@ -80,7 +80,7 @@ export default function TicketsPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Support Tickets</BreadcrumbPage>
+            <BreadcrumbPage>Quản lý Mã giảm giá</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -97,13 +97,13 @@ export default function TicketsPage() {
                 placeholder="Search tickets..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-10 py-2 w-full border-lightBorderV1 focus:border-mainTextHoverV1 text-gray-800"
+                className="pl-10 pr-10 py-2 w-full border-lightBorderV1 focus:border-mainTextHoverV1 text-gray-700"
               />
-              <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-800 w-5 h-5" />
+              <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
               {searchQuery && (
                 <button
                   onClick={handleClearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-800 hover:text-red-500 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-red-500 transition-colors"
                   type="button"
                 >
                   <IconX className="w-5 h-5" />
@@ -134,7 +134,7 @@ export default function TicketsPage() {
               ))}
             </div>
           ) : displayTickets.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-gray-700">
               No tickets found
             </div>
           ) : (
@@ -159,7 +159,7 @@ export default function TicketsPage() {
                             {ticket.priority || "LOW"}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-700">
                           by {ticket.userId?.name || "Unknown"} •{" "}
                           {formatRelativeTime(ticket.createdAt)}
                         </p>
@@ -171,9 +171,9 @@ export default function TicketsPage() {
                   </CardHeader>
                   <CardContent>
                     <h3 className="font-semibold mb-2">{ticket.subject}</h3>
-                    <p className="text-sm text-gray-600">{ticket.content}</p>
+                    <p className="text-sm text-gray-700">{ticket.content}</p>
                     {ticket.assignedTo && (
-                      <p className="text-sm text-gray-500 mt-2">
+                      <p className="text-sm text-gray-700 mt-2">
                         Assigned to: {ticket.assignedTo}
                       </p>
                     )}

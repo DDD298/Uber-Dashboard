@@ -33,22 +33,22 @@ export const UserTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-green-50 hover:bg-gray-50">
-            <TableHead className="font-semibold text-gray-800 text-nowrap w-[60px]">
+            <TableHead className="font-semibold text-gray-700 text-nowrap w-[60px]">
               STT
             </TableHead>
-            <TableHead className="font-semibold text-gray-800 text-nowrap">
+            <TableHead className="font-semibold text-gray-700 text-nowrap">
               Thông tin người dùng
             </TableHead>
-            <TableHead className="font-semibold text-gray-800 text-nowrap w-[180px]">
+            <TableHead className="font-semibold text-gray-700 text-nowrap w-[180px]">
               Email
             </TableHead>
-            <TableHead className="font-semibold text-gray-800 text-nowrap">
+            <TableHead className="font-semibold text-gray-700 text-nowrap">
               Tổng chuyến đi
             </TableHead>
-            <TableHead className="font-semibold text-gray-800 text-nowrap">
+            <TableHead className="font-semibold text-gray-700 text-nowrap">
               Hoàn thành
             </TableHead>
-            <TableHead className="font-semibold text-gray-800 text-nowrap">
+            <TableHead className="font-semibold text-gray-700 text-nowrap">
               Hành động
             </TableHead>
           </TableRow>
@@ -56,7 +56,7 @@ export const UserTable = ({
         <TableBody>
           {users.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-gray-800">
+              <TableCell colSpan={7} className="text-center py-8 text-gray-700">
                 {isSearching ? "No user found" : "No users available"}
               </TableCell>
             </TableRow>
@@ -70,7 +70,7 @@ export const UserTable = ({
                   key={userId}
                   className="hover:bg-gray-50 transition-colors"
                 >
-                  <TableCell className="text-center font-medium text-gray-800">
+                  <TableCell className="text-center font-medium text-gray-700">
                     {rowNumber}
                   </TableCell>
                   <TableCell className="flex items-center gap-2">
@@ -87,9 +87,9 @@ export const UserTable = ({
                       />
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-800">{user.name}</p>
+                      <p className="font-semibold text-gray-700">{user.name}</p>
                       {user.clerk_id && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-700">
                           ID: {user.clerk_id.substring(0, 12)}...
                         </p>
                       )}
@@ -97,7 +97,7 @@ export const UserTable = ({
                   </TableCell>
                   <TableCell className="w-[180px]">
                     <div className="flex items-center">
-                      <span className="text-gray-800 text-wrap">
+                      <span className="text-gray-700 text-wrap">
                         {user.email}
                       </span>
                     </div>
@@ -122,7 +122,7 @@ export const UserTable = ({
                           variant="outline"
                           size="icon"
                           onClick={() => onEdit(userId)}
-                          className="text-gray-800 hover:text-mainTextHoverV1 hover:bg-transparent"
+                          className="text-gray-700 hover:text-mainTextHoverV1 hover:bg-transparent"
                         >
                           <IconMenu3 className="h-4 w-4" />
                         </Button>
@@ -135,7 +135,7 @@ export const UserTable = ({
                           variant="outline"
                           size="icon"
                           onClick={() => onDelete(userId)}
-                          className="text-gray-800 hover:text-mainDangerV1 hover:bg-transparent"
+                          className="text-gray-700 hover:text-mainDangerV1 hover:bg-transparent"
                         >
                           <IconTrash className="h-4 w-4" />
                         </Button>

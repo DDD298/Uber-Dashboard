@@ -1,5 +1,3 @@
-
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -51,7 +49,7 @@ export const DeleteDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="!border-b-[#ccc] px-4">
-          <DialogTitle className="text-gray-800">{title}</DialogTitle>
+          <DialogTitle className="text-gray-700">{title}</DialogTitle>
         </DialogHeader>
 
         {warningMessage && (
@@ -97,9 +95,4 @@ export const DeleteDialog = ({
       </DialogContent>
     </Dialog>
   );
-}; 
-
-
-
-
-
+};

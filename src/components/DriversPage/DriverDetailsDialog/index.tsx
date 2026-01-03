@@ -40,7 +40,7 @@ export default function DriverDetailsDialog({
         className="max-h-[90vh] overflow-y-auto bg-[#eee]"
       >
         <DialogHeader>
-          <DialogTitle className="text-gray-800">
+          <DialogTitle className="text-gray-700">
             {isEditMode
               ? driver
                 ? "Chỉnh sửa tài xế"
@@ -50,7 +50,7 @@ export default function DriverDetailsDialog({
         </DialogHeader>
 
         {isEditMode ? (
-          <Card className="p-6">
+          <Card>
             <DriverForm driver={driver} onClose={onClose} />
           </Card>
         ) : (
@@ -75,7 +75,7 @@ export default function DriverDetailsDialog({
                     {/* Total Rides */}
                     <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
                       <div className="flex items-start justify-between">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        <p className="text-sm font-medium text-gray-700 uppercase tracking-wide">
                           Tổng chuyến đi
                         </p>
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
@@ -83,10 +83,10 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold text-gray-700">
                           {driver?.total_rides || 0}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-gray-700 mt-1">
                           chuyến hoàn thành
                         </p>
                       </div>
@@ -95,7 +95,7 @@ export default function DriverDetailsDialog({
                     {/* Earnings */}
                     <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
                       <div className="flex items-start justify-between">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        <p className="text-sm font-medium text-gray-700 uppercase tracking-wide">
                           Tổng thu nhập
                         </p>
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
@@ -103,14 +103,14 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold text-gray-700">
                           {new Intl.NumberFormat("vi-VN", {
                             style: "currency",
                             currency: "VND",
                             maximumFractionDigits: 0,
                           }).format(Number(driver?.total_earnings) || 0)}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-gray-700 mt-1">
                           doanh thu tích lũy
                         </p>
                       </div>
@@ -119,7 +119,7 @@ export default function DriverDetailsDialog({
                     {/* Rating */}
                     <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
                       <div className="flex items-start justify-between">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        <p className="text-sm font-medium text-gray-700 uppercase tracking-wide">
                           Đánh giá TB
                         </p>
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
@@ -127,12 +127,12 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold text-gray-700">
                           {driver?.average_rating
                             ? Number(driver.average_rating).toFixed(2)
                             : "N/A"}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-gray-700 mt-1">
                           điểm trung bình
                         </p>
                       </div>
@@ -141,7 +141,7 @@ export default function DriverDetailsDialog({
                     {/* Rating Count */}
                     <Card className="p-4 border-gray-100 hover:shadow-md transition-all duration-300 group">
                       <div className="flex items-start justify-between">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        <p className="text-sm font-medium text-gray-700 uppercase tracking-wide">
                           Lượt đánh giá
                         </p>
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
@@ -149,10 +149,10 @@ export default function DriverDetailsDialog({
                         </div>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold text-gray-700">
                           {driver?.rating_count || 0}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-gray-700 mt-1">
                           phản hồi từ khách
                         </p>
                       </div>
@@ -171,10 +171,10 @@ export default function DriverDetailsDialog({
                       <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
                         <History size={24} className="text-gray-400" />
                       </div>
-                      <h4 className="font-medium text-gray-900 mb-1">
+                      <h4 className="font-medium text-gray-700 mb-1">
                         Chưa có lịch sử chuyến đi
                       </h4>
-                      <p className="text-sm text-gray-500 max-w-xs">
+                      <p className="text-sm text-gray-700 max-w-xs">
                         Tài xế này chưa thực hiện chuyến đi nào hoặc lịch sử
                         chưa được cập nhật.
                       </p>

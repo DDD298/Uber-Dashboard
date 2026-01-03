@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL;
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -70,6 +70,23 @@ export const API_ENDPOINTS = {
   UPLOAD: {
     SINGLE: '/upload/single',
     MULTIPLE: '/upload/multiple',
+  },
+  DRIVER: {
+    GET_ALL: '/admin/drivers',
+    GET_BY_ID: '/admin/drivers/:id',
+    CREATE: '/admin/drivers',
+    UPDATE: '/admin/drivers/:id',
+    DELETE: '/admin/drivers/:id',
+    APPROVE: '/admin/drivers/:id/approve',
+    GET_PENDING: '/admin/drivers/pending',
+  },
+  PROMO_CODE: {
+    GET_ALL: '/admin/promo-codes',
+    GET_BY_ID: '/admin/promo-codes/:id',
+    CREATE: '/admin/promo-codes',
+    UPDATE: '/admin/promo-codes/:id',
+    DELETE: '/admin/promo-codes/:id',
+    VALIDATE: '/admin/promo-codes/validate',
   },
 };
 

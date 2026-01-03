@@ -64,8 +64,8 @@ const StatCard = ({
       <Link href={link}>
         <Card className="group cursor-pointer relative overflow-hidden p-5 h-full flex flex-col bg-white transition-all duration-300 shadow-md border border-gray-100">
           {/* Header with title and icon */}
-          <div className="flex items-start justify-between">
-            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm text-green-600 font-semibold uppercase tracking-wide">
               {title}
             </h3>
             <div
@@ -76,25 +76,27 @@ const StatCard = ({
           </div>
 
           {/* Main value */}
-          <div className="mb-2">
-            <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <div>
+            <p className="text-3xl font-bold text-gray-700">{value}</p>
+            {trendValue && (
+              <div className="flex items-center gap-1.5 mt-auto pt-2">
+                <TrendingUp size={14} className="text-green-700" />
+                <span className="text-sm font-semibold text-green-700">
+                  {trendValue}
+                </span>
+                {trendLabel && (
+                  <span className="text-sm text-gray-700">{trendLabel}</span>
+                )}
+              </div>
+            )}
             {subtitle && (
-              <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+              <p className="text-sm font-semibold text-gray-700 mt-2 px-3 py-1 bg-gray-100 rounded-full">
+                {subtitle}
+              </p>
             )}
           </div>
 
           {/* Trend indicator */}
-          {trendValue && (
-            <div className="flex items-center gap-1.5 mt-auto pt-2">
-              <TrendingUp size={14} className="text-green-700" />
-              <span className="text-sm font-semibold text-green-700">
-                {trendValue}
-              </span>
-              {trendLabel && (
-                <span className="text-sm text-gray-500">{trendLabel}</span>
-              )}
-            </div>
-          )}
         </Card>
       </Link>
     </motion.div>

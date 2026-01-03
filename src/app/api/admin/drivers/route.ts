@@ -86,35 +86,55 @@ export async function POST(request: NextRequest) {
     const {
       first_name,
       last_name,
+      email,
+      phone,
       profile_image_url,
       car_image_url,
       car_seats,
       vehicle_type,
+      license_plate,
     } = body;
 
     // Validate required fields
-    if (!first_name || !last_name) {
+    if (!first_name || !last_name || !email || !phone || !license_plate) {
       return NextResponse.json(
-        { success: false, error: "First name and last name are required" },
+        { success: false, error: "Thiếu thông tin bắt buộc" },
+        { status: 400 }
+      );
+    }
+
+    // Check if email already exists
+    const existingDriver = await executeSql(
+      `SELECT id FROM drivers WHERE email = $1`,
+      [email]
+    );
+
+    if (existingDriver.length > 0) {
+      return NextResponse.json(
+        { success: false, error: "Email đã được sử dụng" },
         { status: 400 }
       );
     }
 
     const result = await executeSql(
       `INSERT INTO drivers (
-        first_name, last_name,
+        first_name, last_name, email, phone,
         profile_image_url, car_image_url, car_seats, vehicle_type,
-        rating, rating_count, average_rating
+        license_plate, rating, rating_count, average_rating,
+        approval_status, status, total_trips, completed_trips, cancelled_trips
       )
-      VALUES ($1, $2, $3, $4, $5, $6, 5.0, 0, 5.0)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 5.0, 0, 5.0, 'pending', 'pending', 0, 0, 0)
       RETURNING *`,
       [
         first_name,
         last_name,
+        email,
+        phone,
         profile_image_url || null,
         car_image_url || null,
         car_seats || 4,
         vehicle_type || "Car",
+        license_plate,
       ]
     );
 
@@ -122,6 +142,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         data: result[0],
+        message: "Tạo tài xế thành công. Đang chờ duyệt.",
       },
       { status: 201 }
     );
@@ -133,4 +154,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 

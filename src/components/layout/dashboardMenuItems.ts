@@ -5,9 +5,8 @@ import {
 	mdiCarSide,
 	mdiMapMarkerPath,
 	mdiStar,
-	mdiAlertCircle,
 	mdiTicket,
-	mdiCog
+	mdiMessageText,
 } from "@mdi/js";
 
 export const getDashboardMenuItems = (): MenuItem[] => [
@@ -19,44 +18,38 @@ export const getDashboardMenuItems = (): MenuItem[] => [
 	},
 	{
 		id: "users",
-		name: "Users",
+		name: "Quản lý Người dùng",
 		path: "/admin/users",
 		icon: mdiAccountGroup,
 	},
 	{
 		id: "drivers",
-		name: "Drivers",
+		name: "Quản lý Tài xế",
 		path: "/admin/drivers",
 		icon: mdiCarSide,
 	},
 	{
 		id: "rides",
-		name: "Rides",
+		name: "Quản lý chuyến",
 		path: "/admin/rides",
 		icon: mdiMapMarkerPath,
 	},
 	{
 		id: "ratings",
-		name: "Ratings",
+		name: "Quản lý đánh giá",
 		path: "/admin/ratings",
 		icon: mdiStar,
 	},
 	{
-		id: "warnings",
-		name: "Warnings",
-		path: "/admin/warnings",
-		icon: mdiAlertCircle,
-	},
-	{
-		id: "tickets",
-		name: "Support Tickets",
-		path: "/admin/tickets",
+		id: "promo-codes",
+		name: "Quản lý mã giảm giá",
+		path: "/admin/promo-codes",
 		icon: mdiTicket,
 	},
 	{
-		id: "settings",
-		name: "Settings",
-		path: "/admin/settings",
-		icon: mdiCog,
+		id: "tickets",
+		name: "Hỗ trợ khách hàng",
+		path: "/admin/tickets",
+		icon: mdiMessageText,
 	},
 ];

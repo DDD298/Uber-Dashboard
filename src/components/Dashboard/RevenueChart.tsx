@@ -223,28 +223,27 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
     0
   );
 
-  // Calculate growth percentage (mock data - you can calculate from actual previous period)
   const revenueGrowth = 12;
   const ridesGrowth = 5;
 
   return (
-    <Card className="p-6">
+    <Card>
       <div className="mb-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-gray-700 mb-2">
               Tổng quan Doanh thu & Chuyến đi
             </h3>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2 text-sm text-gray-700">
               <Calendar size={16} />
               <span>{getPeriodLabel()}</span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 mt-4">
+        <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-100">
-            <p className="text-sm text-gray-600 mb-1">Tổng doanh thu</p>
+            <p className="text-sm text-gray-700 mb-1">Tổng doanh thu</p>
             <div className="flex items-end gap-3">
               <p className="text-2xl font-bold text-green-700">
                 {new Intl.NumberFormat("vi-VN", {
@@ -261,7 +260,7 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
             </div>
           </div>
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-100">
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-gray-700 mb-1">
               Tổng chuyến đi hoàn thành
             </p>
             <div className="flex items-end gap-3">

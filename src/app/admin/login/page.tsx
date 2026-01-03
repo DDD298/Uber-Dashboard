@@ -141,7 +141,7 @@ export default function LoginPage() {
                 <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent uppercase">
                   Admin Portal
                 </h2>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-700 text-sm">
                   Sign in to access the Uber admin dashboard
                 </p>
               </div>
@@ -157,7 +157,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="email"
-                    className="text-sm text-gray-500 uppercase tracking-wide"
+                    className="text-sm text-gray-700 uppercase tracking-wide"
                   >
                     Admin Email
                   </Label>
@@ -178,7 +178,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="password"
-                    className="text-sm text-gray-500 uppercase tracking-wide"
+                    className="text-sm text-gray-700 uppercase tracking-wide"
                   >
                     Password
                   </Label>
@@ -196,7 +196,7 @@ export default function LoginPage() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={isPending}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
                     >
                       {showPassword ? (
                         <EyeSlash size="20" color="currentColor" />
@@ -220,7 +220,7 @@ export default function LoginPage() {
                       className="w-4 h-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
                       disabled={isPending}
                     />
-                    <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                    <span className="text-sm text-gray-700 group-hover:text-gray-700 transition-colors">
                       Remember me
                     </span>
                   </label>
@@ -246,7 +246,7 @@ export default function LoginPage() {
 
                 {/* Security Notice */}
                 <div className="text-center pt-4 border-t border-gray-200">
-                  <div className="text-sm flex items-center justify-center gap-2 text-gray-500">
+                  <div className="text-sm flex items-center justify-center gap-2 text-gray-700">
                     <Lock1 size="16" color="#7F8788" />
                     <span>
                       Secure admin access only · Contact support if you need

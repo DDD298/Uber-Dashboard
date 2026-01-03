@@ -6,7 +6,7 @@ import { useMenuSidebar } from "@/stores/useMenuSidebar";
 import { mdiLoading } from "@mdi/js";
 import { Icon } from "@mdi/react";
 import type React from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/context/useUserContext";
 import { HamburgerMenu } from "iconsax-reactjs";
 import { IconLogout } from "@tabler/icons-react";
@@ -14,7 +14,13 @@ import { IconLogout } from "@tabler/icons-react";
 export default function CommonHeader() {
   const { toggle } = useMenuSidebar();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const isLoading = false;
   const { logoutUser } = useUser();
 
@@ -29,13 +35,20 @@ export default function CommonHeader() {
       p-4 px-4 bg-mainDarkBackgroundV1 border-b border-b-darkBorderV1 flex justify-between items-center h-[78px]"
         suppressHydrationWarning
       >
-        <div className="flex items-center w-[244px] justify-between">
-          <button
-            onClick={toggle}
-            className="bg-[#29323A] flex items-center justify-center hover:bg-[#29323A]/80 !text-white/70 !p-0 !h-10 !w-10 rounded-full"
-          >
-            <HamburgerMenu size="20" color="#fff" />
-          </button>
+        <div
+          className="flex items-center w-[244px] justify-between"
+          suppressHydrationWarning
+        >
+          {isMounted ? (
+            <button
+              onClick={toggle}
+              className="bg-[#29323A] flex items-center justify-center hover:bg-[#29323A]/80 !text-white/70 !p-0 !h-10 !w-10 rounded-full"
+            >
+              <HamburgerMenu size="20" color="#fff" />
+            </button>
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-[#29323A]" />
+          )}
         </div>
         <div className="relative hidden md:block">
           <form

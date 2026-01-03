@@ -110,7 +110,7 @@ export default function DashboardLayout({
                                 />
                               </div>
                               {isOpen && (
-                                <span className="text-nowrap text-sm">
+                                <span className="text-nowrap text-sm font-medium">
                                   {menu.name}
                                 </span>
                               )}

@@ -131,13 +131,13 @@ export default function UserPage() {
                 placeholder="Tìm kiếm theo tên hoặc email..."
                 value={searchQuery}
                 onChange={handleSearch}
-                className="pl-10 pr-10 py-2 w-full border-lightBorderV1 focus:border-mainTextHoverV1 text-gray-800"
+                className="pl-10 pr-10 py-2 w-full border-lightBorderV1 focus:border-mainTextHoverV1 text-gray-700"
               />
-              <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-800 w-5 h-5" />
+              <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 w-5 h-5" />
               {searchQuery && (
                 <button
                   onClick={handleClearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-800 hover:text-red-500 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-red-500 transition-colors"
                   type="button"
                 >
                   <IconX className="w-5 h-5" />

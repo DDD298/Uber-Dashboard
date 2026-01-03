@@ -153,7 +153,7 @@ export const DriverCreateDialog = ({
         className="max-h-[90vh] overflow-y-auto bg-white max-w-2xl"
       >
         <DialogHeader>
-          <DialogTitle className="text-gray-800">Thêm tài xế mới</DialogTitle>
+          <DialogTitle className="text-gray-700">Thêm tài xế mới</DialogTitle>
         </DialogHeader>
 
         <motion.div
@@ -164,7 +164,7 @@ export const DriverCreateDialog = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Clerk ID */}
             <div className="space-y-2">
-              <Label htmlFor="clerk_id" className="text-gray-800">
+              <Label htmlFor="clerk_id" className="text-gray-700">
                 Clerk ID <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export const DriverCreateDialog = ({
             {/* Name Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="first_name" className="text-gray-800">
+                <Label htmlFor="first_name" className="text-gray-700">
                   Tên <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -217,7 +217,7 @@ export const DriverCreateDialog = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="last_name" className="text-gray-800">
+                <Label htmlFor="last_name" className="text-gray-700">
                   Họ <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -239,7 +239,7 @@ export const DriverCreateDialog = ({
             {/* Contact Info */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-800">
+                <Label htmlFor="email" className="text-gray-700">
                   Email <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -259,7 +259,7 @@ export const DriverCreateDialog = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone_number" className="text-gray-800">
+                <Label htmlFor="phone_number" className="text-gray-700">
                   Số điện thoại
                 </Label>
                 <Input
@@ -283,7 +283,7 @@ export const DriverCreateDialog = ({
             {/* Vehicle Info */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="license_plate" className="text-gray-800">
+                <Label htmlFor="license_plate" className="text-gray-700">
                   Biển số xe
                 </Label>
                 <Input
@@ -299,7 +299,7 @@ export const DriverCreateDialog = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="vehicle_type" className="text-gray-800">
+                <Label htmlFor="vehicle_type" className="text-gray-700">
                   Loại xe
                 </Label>
                 <Select
@@ -321,7 +321,7 @@ export const DriverCreateDialog = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="vehicle_model" className="text-gray-800">
+                <Label htmlFor="vehicle_model" className="text-gray-700">
                   Mẫu xe
                 </Label>
                 <Input
@@ -337,7 +337,7 @@ export const DriverCreateDialog = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="vehicle_year" className="text-gray-800">
+                <Label htmlFor="vehicle_year" className="text-gray-700">
                   Năm sản xuất
                 </Label>
                 <Input

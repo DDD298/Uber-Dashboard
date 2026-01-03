@@ -114,7 +114,7 @@ export const UserForm = ({
       {/* Avatar Upload */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label className="text-gray-800">Avatar</Label>
+          <Label className="text-gray-700">Avatar</Label>
           {isUploadingAvatar && (
             <div className="flex items-center gap-2 text-sm text-green-700">
               <IconLoader2 className="h-4 w-4 animate-spin" />
@@ -147,12 +147,12 @@ export const UserForm = ({
                   )}
                 </div>
                 <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-800 group-hover:text-mainTextHoverV1">
+                  <div className="text-sm font-semibold text-gray-700 group-hover:text-mainTextHoverV1">
                     {isUploadingAvatar
                       ? "Đang tải ảnh..."
                       : "Tải ảnh đại diện lên"}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">
+                  <div className="text-sm text-gray-700 mt-1">
                     Select image (max 10MB)
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export const UserForm = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="role" className="text-gray-800">
+        <Label htmlFor="role" className="text-gray-700">
           Role
         </Label>
         <Select
@@ -210,7 +210,7 @@ export const UserForm = ({
       {/* Form Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-gray-800">
+          <Label htmlFor="name" className="text-gray-700">
             Username <span className="text-red-500">*</span>
           </Label>
           <Input
@@ -227,7 +227,7 @@ export const UserForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="fullName" className="text-gray-800">
+          <Label htmlFor="fullName" className="text-gray-700">
             Full Name <span className="text-red-500">*</span>
           </Label>
           <Input
@@ -246,7 +246,7 @@ export const UserForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-gray-800">
+          <Label htmlFor="email" className="text-gray-700">
             Email <span className="text-red-500">*</span>
           </Label>
           <Input
@@ -266,7 +266,7 @@ export const UserForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-gray-800">
+          <Label htmlFor="password" className="text-gray-700">
             New Password (leave blank if not changing)
           </Label>
           <Input
@@ -287,7 +287,7 @@ export const UserForm = ({
 
         {formData.role === "student" && (
           <div className="space-y-2">
-            <Label htmlFor="studentId" className="text-gray-800">
+            <Label htmlFor="studentId" className="text-gray-700">
               Student ID
             </Label>
             <div className="flex items-center gap-2">
@@ -322,7 +322,7 @@ export const UserForm = ({
 
         {(formData.role === "student" || formData.role === "coordinator") && (
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber" className="text-gray-800">
+            <Label htmlFor="phoneNumber" className="text-gray-700">
               Phone Number
             </Label>
             <Input
@@ -343,7 +343,7 @@ export const UserForm = ({
 
         {(formData.role === "student" || formData.role === "coordinator") && (
           <div className="space-y-2">
-            <Label htmlFor="department" className="text-gray-800">
+            <Label htmlFor="department" className="text-gray-700">
               Department
             </Label>
             <Select
@@ -373,7 +373,7 @@ export const UserForm = ({
       </div>
 
       <div className="flex items-center justify-between space-x-2">
-        <Label htmlFor="active" className="text-gray-800">
+        <Label htmlFor="active" className="text-gray-700">
           Active
         </Label>
         <Switch

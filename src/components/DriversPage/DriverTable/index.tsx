@@ -74,31 +74,31 @@ export default function DriverTable({
         <Table>
           <TableHeader>
             <TableRow className="bg-green-50 hover:bg-gray-50">
-              <TableHead className="font-semibold text-gray-800 text-nowrap w-[60px]">
+              <TableHead className="font-semibold text-gray-700 text-nowrap w-[60px]">
                 STT
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Thông tin tài xế
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Loại xe
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Số chỗ
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Đánh giá
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Tổng chuyến
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Hoàn thành
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Thu nhập
               </TableHead>
-              <TableHead className="font-semibold text-gray-800 text-nowrap">
+              <TableHead className="font-semibold text-gray-700 text-nowrap">
                 Hành động
               </TableHead>
             </TableRow>
@@ -108,7 +108,7 @@ export default function DriverTable({
               <TableRow>
                 <TableCell
                   colSpan={9}
-                  className="text-center py-8 text-gray-800"
+                  className="text-center py-8 text-gray-700"
                 >
                   Không tìm thấy tài xế nào
                 </TableCell>
@@ -124,7 +124,7 @@ export default function DriverTable({
                     key={driverId}
                     className="hover:bg-gray-50 transition-colors"
                   >
-                    <TableCell className="text-center font-medium text-gray-800">
+                    <TableCell className="text-center font-medium text-gray-700">
                       {rowNumber}
                     </TableCell>
                     <TableCell className="flex items-center gap-2">
@@ -139,10 +139,10 @@ export default function DriverTable({
                         />
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-800">
+                        <p className="font-semibold text-gray-700">
                           {driver.first_name} {driver.last_name}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-700">
                           ID: {driverId.toString().substring(0, 8)}
                         </p>
                       </div>
@@ -153,7 +153,7 @@ export default function DriverTable({
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <IconCar className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-800">
+                        <span className="text-gray-700">
                           {driver.car_seats || 4}
                         </span>
                       </div>
@@ -161,7 +161,7 @@ export default function DriverTable({
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <span className="text-yellow-500">★</span>
-                        <span className="font-medium text-gray-800">
+                        <span className="font-medium text-gray-700">
                           {driver.average_rating
                             ? Number(driver.average_rating).toFixed(2)
                             : "5.00"}
@@ -194,7 +194,7 @@ export default function DriverTable({
                             variant="outline"
                             size="icon"
                             onClick={() => onView(driverId)}
-                            className="text-gray-800 hover:text-mainTextHoverV1 hover:bg-transparent"
+                            className="text-gray-700 hover:text-mainTextHoverV1 hover:bg-transparent"
                           >
                             <IconMenu3 className="h-4 w-4" />
                           </Button>
@@ -207,7 +207,7 @@ export default function DriverTable({
                             variant="outline"
                             size="icon"
                             onClick={() => onDelete(driverId)}
-                            className="text-gray-800 hover:text-mainDangerV1 hover:bg-transparent"
+                            className="text-gray-700 hover:text-mainDangerV1 hover:bg-transparent"
                           >
                             <IconTrash className="h-4 w-4" />
                           </Button>
@@ -224,7 +224,7 @@ export default function DriverTable({
 
       {pagination && pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700">
             Hiển thị {(currentPage - 1) * pagination.limit + 1} -{" "}
             {Math.min(currentPage * pagination.limit, pagination.total)} trong
             tổng số {pagination.total} tài xế
