@@ -1,8 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import dynamic from "next/dynamic";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+
+const ProtectedRoute = dynamic(
+  () => import("@/components/auth/ProtectedRoute"),
+  { ssr: false }
+);
 
 export default function AdminLayout({
   children,

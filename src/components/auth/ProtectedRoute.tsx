@@ -18,11 +18,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     setIsClient(true);
   }, []);
 
-  // Auto-handle case: has token but no profile -> avoid infinite loading
   useEffect(() => {
     if (!isClient) return;
 
-    // Only handle when profile loading is done but still no profile
     if (!isLoadingProfile && !profile) {
       if (typeof window !== "undefined") {
         const hasAccessTokenLS =
@@ -72,26 +70,11 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return () => clearTimeout(timeoutId);
   }, [isClient, isLoadingProfile, router]);
 
-  // Optimized loading states - reduced loading time by checking localStorage first
   if (!isClient) {
-    // Check localStorage immediately for faster initial render
-    if (typeof window !== "undefined") {
-      const storedProfile = localStorage.getItem("userProfile");
-      const hasToken = localStorage.getItem("accessToken");
-
-      if (storedProfile && hasToken) {
-        // Return children immediately if we have stored auth data
-        return <>{children}</>;
-      }
-    }
-
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    return <>{children}</>;
   }
 
+  // Client-side only checks below
   if (isLoadingProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center">

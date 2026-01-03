@@ -706,3 +706,179 @@ export const useUpdateTicketStatus = () => {
     },
   });
 };
+
+// Ride hooks
+interface Ride {
+  id: number;
+  ride_id: string;
+  user_id: string;
+  driver_id: string;
+  user?: {
+    clerk_id: string;
+    name: string;
+    email: string;
+  };
+  driver?: {
+    clerk_id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    vehicle_type?: string;
+    license_plate?: string;
+  };
+  origin_address: string;
+  destination_address: string;
+  origin_latitude: number;
+  origin_longitude: number;
+  destination_latitude: number;
+  destination_longitude: number;
+  ride_time: number;
+  fare_price: number;
+  payment_status: 'pending' | 'completed' | 'failed' | 'refunded';
+  status: 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
+  promo_code_id?: number;
+  discount_amount?: number;
+  final_price: number;
+  created_at: string;
+  updated_at: string;
+  started_at?: string;
+  completed_at?: string;
+  cancelled_at?: string;
+  cancellation_reason?: string;
+  driver_rating?: number;
+  user_rating?: number;
+}
+
+interface RidesResponse {
+  success: boolean;
+  data: Ride[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+interface RideResponse {
+  success: boolean;
+  data: Ride;
+}
+
+interface RidesQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  payment_status?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}
+
+interface UpdateRideData {
+  status?: Ride['status'];
+  payment_status?: Ride['payment_status'];
+  driver_id?: string;
+  cancellation_reason?: string;
+  driver_rating?: number;
+  user_rating?: number;
+  notes?: string;
+}
+
+// Fetch rides list
+export const useAdminRides = (params: RidesQueryParams = {}) => {
+  const queryParams = new URLSearchParams();
+  
+  if (params.page) queryParams.append("page", params.page.toString());
+  if (params.limit) queryParams.append("limit", params.limit.toString());
+  if (params.search) queryParams.append("search", params.search);
+  if (params.status) queryParams.append("status", params.status);
+  if (params.payment_status) queryParams.append("payment_status", params.payment_status);
+  if (params.sortBy) queryParams.append("sortBy", params.sortBy);
+  if (params.sortOrder) queryParams.append("sortOrder", params.sortOrder);
+
+  return useQuery<RidesResponse>({
+    queryKey: ["admin-rides", params],
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/rides?${queryParams.toString()}`);
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy danh sách chuyến đi");
+      }
+      return response.json();
+    },
+  });
+};
+
+// Fetch single ride by ID
+export const useGetRideById = (rideId: string) => {
+  return useQuery<RideResponse>({
+    queryKey: ["admin-ride", rideId],
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/rides/${rideId}`);
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin chuyến đi");
+      }
+      return response.json();
+    },
+    enabled: !!rideId,
+  });
+};
+
+// Update ride
+export const useUpdateRide = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string | number; data: UpdateRideData }) => {
+      const response = await fetch(`/api/admin/rides/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi cập nhật chuyến đi");
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-rides"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-ride", variables.id.toString()] });
+      toast.success("Cập nhật chuyến đi thành công!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Lỗi khi cập nhật chuyến đi");
+    },
+  });
+};
+
+// Delete ride
+export const useDeleteRide = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (rideId: string | number) => {
+      const response = await fetch(`/api/admin/rides/${rideId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Lỗi khi xóa chuyến đi");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-rides"] });
+      toast.success("Xóa chuyến đi thành công!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Lỗi khi xóa chuyến đi");
+    },
+  });
+};

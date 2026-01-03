@@ -34,22 +34,22 @@ export const getDashboardMenuItems = (): MenuItem[] => [
 		path: "/admin/rides",
 		icon: mdiMapMarkerPath,
 	},
-	{
-		id: "ratings",
-		name: "Quản lý đánh giá",
-		path: "/admin/ratings",
-		icon: mdiStar,
-	},
+	// {
+	// 	id: "ratings",
+	// 	name: "Quản lý đánh giá",
+	// 	path: "/admin/ratings",
+	// 	icon: mdiStar,
+	// },
 	{
 		id: "promo-codes",
 		name: "Quản lý mã giảm giá",
 		path: "/admin/promo-codes",
 		icon: mdiTicket,
 	},
-	{
-		id: "tickets",
-		name: "Hỗ trợ khách hàng",
-		path: "/admin/tickets",
-		icon: mdiMessageText,
-	},
+	// {
+	// 	id: "tickets",
+	// 	name: "Hỗ trợ khách hàng",
+	// 	path: "/admin/tickets",
+	// 	icon: mdiMessageText,
+	// },
 ];

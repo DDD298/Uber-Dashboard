@@ -114,12 +114,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center overflow-y-hidden justify-center bg-[#001110] p-4 relative overflow-hidden w-full">
+    <div
+      className="min-h-screen flex items-center overflow-y-hidden justify-center bg-[#001110] p-4 relative overflow-hidden w-full"
+      suppressHydrationWarning
+    >
       {/* Background decorative shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-3xl opacity-60" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-600 rounded-full blur-3xl opacity-40" />
 
-      <div className="w-full max-w-5xl bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden relative z-10">
+      <div
+        className="w-full max-w-5xl bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden relative z-10"
+        suppressHydrationWarning
+      >
         <div className="grid lg:grid-cols-2">
           {/* Left Panel - Welcome Section */}
           <div
