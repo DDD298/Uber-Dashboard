@@ -132,7 +132,7 @@ export default function RideDetailsDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         size="large"
-        className="max-h-[90vh] overflow-y-auto bg-[#eee]"
+        className="max-h-[90vh] overflow-y-auto bg-[#EFF0F7]"
       >
         <DialogHeader>
           <div className="flex items-center justify-between">

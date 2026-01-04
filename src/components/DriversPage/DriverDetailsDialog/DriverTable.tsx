@@ -11,8 +11,8 @@ export default function DriverTable({ driver }: DriverTableProps) {
   return (
     <div className="space-y-4">
       {/* Basic Info */}
-      <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+      <div className="flex items-start gap-3 p-3 bg-[#EEF6EF] rounded-xl border border-green-200">
+        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-200 flex-shrink-0">
           <img
             src={
               driver.profile_image_url ||
@@ -23,10 +23,10 @@ export default function DriverTable({ driver }: DriverTableProps) {
           />
         </div>
         <div className="flex-1 pt-2">
-          <h3 className="text-xl font-semibold text-gray-700">
+          <h3 className="text-xl font-semibold text-green-600">
             {driver.first_name} {driver.last_name}
           </h3>
-          <p className="text-gray-700 text-sm mt-1">
+          <p className="text-gray-700 text-sm mt-1 capitalize italic font-semibold">
             {driver.vehicle_type || "N/A"} Driver
           </p>
         </div>
@@ -48,18 +48,22 @@ export default function DriverTable({ driver }: DriverTableProps) {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <IconCar className="h-5 w-5 text-gray-400" />
+          <div className="flex items-center gap-3 p-3 bg-[#EEF6EF] rounded-lg">
+            <IconCar className="h-5 w-5 text-green-500" />
             <div>
-              <p className="text-sm text-gray-700">Loại xe</p>
-              <p className="font-medium">{driver.vehicle_type || "N/A"}</p>
+              <p className="text-sm text-gray-700 font-semibold">Loại xe:</p>
+              <p className="font-medium capitalize">
+                {driver.vehicle_type || "N/A"}
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <IconArmchair className="h-5 w-5 text-gray-400" />
+          <div className="flex items-center gap-3 p-3 bg-[#EEF6EF] rounded-lg">
+            <IconArmchair className="h-5 w-5 text-green-500" />
             <div>
-              <p className="text-sm text-gray-700">Số chỗ</p>
-              <p className="font-medium">{driver.car_seats || "N/A"}</p>
+              <p className="text-sm text-gray-700 font-semibold">Số chỗ:</p>
+              <p className="font-medium capitalize">
+                {driver.car_seats || "N/A"}
+              </p>
             </div>
           </div>
         </div>

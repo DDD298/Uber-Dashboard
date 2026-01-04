@@ -72,7 +72,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
               href={`/admin/drivers/${driver.id}`}
               className="block"
             >
-              <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all cursor-pointer group">
+              <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#EEF6EF] transition-all cursor-pointer group">
                 {/* Rank Badge */}
                 <div
                   className={`w-10 h-10 rounded-full ${getMedalColor(

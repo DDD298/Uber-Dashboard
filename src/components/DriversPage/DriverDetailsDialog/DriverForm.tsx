@@ -21,16 +21,17 @@ interface DriverFormProps {
 
 export default function DriverForm({ driver, onClose }: DriverFormProps) {
   const [formData, setFormData] = useState({
-    clerk_id: driver?.clerk_id || "",
     first_name: driver?.first_name || "",
     last_name: driver?.last_name || "",
     email: driver?.email || "",
-    phone_number: driver?.phone_number || "",
-    license_plate: driver?.license_plate || "",
+    phone: driver?.phone || driver?.phone_number || "",
+    car_seats: driver?.car_seats?.toString() || "",
     vehicle_type: driver?.vehicle_type || "",
-    vehicle_model: driver?.vehicle_model || "",
-    vehicle_year: driver?.vehicle_year?.toString() || "",
-    active: driver?.active !== undefined ? driver.active : true,
+    license_number: driver?.license_number || driver?.license_plate || "",
+    profile_image_url: driver?.profile_image_url || "",
+    car_image_url: driver?.car_image_url || "",
+    status: driver?.status || "offline",
+    approval_status: driver?.approval_status || "pending",
   });
 
   const createDriverMutation = useCreateDriver();
@@ -40,20 +41,24 @@ export default function DriverForm({ driver, onClose }: DriverFormProps) {
     e.preventDefault();
 
     const data = {
-      ...formData,
-      vehicle_year: formData.vehicle_year
-        ? parseInt(formData.vehicle_year)
-        : undefined,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      phone: formData.phone,
+      car_seats: formData.car_seats ? parseInt(formData.car_seats) : undefined,
+      vehicle_type: formData.vehicle_type,
+      license_number: formData.license_number,
+      profile_image_url: formData.profile_image_url,
+      car_image_url: formData.car_image_url,
+      status: formData.status,
+      approval_status: formData.approval_status,
     };
 
-    if (driver) {
+    if (driver?.id) {
       // Update existing driver
       updateDriverMutation.mutate(
         {
-          id:
-            driver.clerk_id ||
-            driver._id ||
-            (driver.id ? String(driver.id) : ""),
+          id: String(driver.id),
           data,
         },
         {
@@ -63,12 +68,7 @@ export default function DriverForm({ driver, onClose }: DriverFormProps) {
         }
       );
     } else {
-      // Create new driver
-      createDriverMutation.mutate(data as any, {
-        onSuccess: () => {
-          onClose();
-        },
-      });
+      console.error("Create driver not implemented in this form");
     }
   };
 
@@ -115,34 +115,34 @@ export default function DriverForm({ driver, onClose }: DriverFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phone_number">Số điện thoại</Label>
+          <Label htmlFor="phone">Số điện thoại</Label>
           <Input
-            id="phone_number"
+            id="phone"
             type="tel"
-            value={formData.phone_number}
-            onChange={(e) => handleChange("phone_number", e.target.value)}
+            value={formData.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
           />
         </div>
 
-        {!driver && (
-          <div className="space-y-2">
-            <Label htmlFor="clerk_id">Clerk ID *</Label>
-            <Input
-              id="clerk_id"
-              value={formData.clerk_id}
-              onChange={(e) => handleChange("clerk_id", e.target.value)}
-              required
-            />
-          </div>
-        )}
+        <div className="space-y-2">
+          <Label htmlFor="license_number">Giấy phép / Biển số</Label>
+          <Input
+            id="license_number"
+            value={formData.license_number}
+            onChange={(e) => handleChange("license_number", e.target.value)}
+          />
+        </div>
 
         {/* Vehicle Information */}
         <div className="space-y-2">
-          <Label htmlFor="license_plate">Biển số xe</Label>
+          <Label htmlFor="car_seats">Số chỗ ngồi</Label>
           <Input
-            id="license_plate"
-            value={formData.license_plate}
-            onChange={(e) => handleChange("license_plate", e.target.value)}
+            id="car_seats"
+            type="number"
+            min="1"
+            max="20"
+            value={formData.car_seats}
+            onChange={(e) => handleChange("car_seats", e.target.value)}
           />
         </div>
 
@@ -156,50 +156,65 @@ export default function DriverForm({ driver, onClose }: DriverFormProps) {
               <SelectValue placeholder="Chọn loại xe" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sedan">Sedan</SelectItem>
-              <SelectItem value="suv">SUV</SelectItem>
-              <SelectItem value="van">Van</SelectItem>
-              <SelectItem value="motorcycle">Xe máy</SelectItem>
+              <SelectItem value="Car">Car</SelectItem>
+              <SelectItem value="Bike">Bike</SelectItem>
+              <SelectItem value="Scooter">Scooter</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
+        {/* Status Fields */}
         <div className="space-y-2">
-          <Label htmlFor="vehicle_model">Mẫu xe</Label>
-          <Input
-            id="vehicle_model"
-            value={formData.vehicle_model}
-            onChange={(e) => handleChange("vehicle_model", e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="vehicle_year">Năm sản xuất</Label>
-          <Input
-            id="vehicle_year"
-            type="number"
-            min="1900"
-            max={new Date().getFullYear() + 1}
-            value={formData.vehicle_year}
-            onChange={(e) => handleChange("vehicle_year", e.target.value)}
-          />
-        </div>
-
-        {/* Status */}
-        <div className="space-y-2">
-          <Label htmlFor="active">Trạng thái</Label>
+          <Label htmlFor="status">Trạng thái hoạt động</Label>
           <Select
-            value={formData.active ? "true" : "false"}
-            onValueChange={(value) => handleChange("active", value === "true")}
+            value={formData.status}
+            onValueChange={(value) => handleChange("status", value)}
           >
             <SelectTrigger>
-              <SelectValue />
+              <SelectValue placeholder="Chọn trạng thái" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="true">Hoạt động</SelectItem>
-              <SelectItem value="false">Không hoạt động</SelectItem>
+              <SelectItem value="online">Online</SelectItem>
+              <SelectItem value="offline">Offline</SelectItem>
+              <SelectItem value="busy">Bận</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="approval_status">Trạng thái duyệt</Label>
+          <Select
+            value={formData.approval_status}
+            onValueChange={(value) => handleChange("approval_status", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Chọn trạng thái duyệt" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">Chờ duyệt</SelectItem>
+              <SelectItem value="approved">Đã duyệt</SelectItem>
+              <SelectItem value="rejected">Từ chối</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Image URLs */}
+        <div className="col-span-1 md:col-span-2 space-y-2">
+          <Label htmlFor="profile_image_url">Ảnh đại diện (URL)</Label>
+          <Input
+            id="profile_image_url"
+            value={formData.profile_image_url}
+            onChange={(e) => handleChange("profile_image_url", e.target.value)}
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-2 space-y-2">
+          <Label htmlFor="car_image_url">Ảnh xe (URL)</Label>
+          <Input
+            id="car_image_url"
+            value={formData.car_image_url}
+            onChange={(e) => handleChange("car_image_url", e.target.value)}
+          />
         </div>
       </div>
 

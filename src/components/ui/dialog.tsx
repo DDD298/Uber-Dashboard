@@ -63,7 +63,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       <div className="flex flex-col gap-4 w-full h-fit">{children}</div>
-      <DialogPrimitive.Close className="absolute right-4 top-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground bg-[#eee] border border-[#ccc] rounded-full p-1">
+      <DialogPrimitive.Close className="absolute right-4 top-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground bg-[#EFF0F7] border border-[#ccc] rounded-full p-1">
         <X className="h-4 w-4 text-gray-600" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -78,7 +78,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-1.5 text-left !text-[#374151] border-b pr-6 pb-2 pt-0 !pl-0 !h-fit w-full",
+      "flex flex-col space-y-1.5 text-left !text-[#374151] border-b border-b-[#ccc] pr-6 pb-2 pt-0 !pl-0 !h-fit w-full",
       className
     )}
     {...props}

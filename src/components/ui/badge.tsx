@@ -43,7 +43,7 @@ const badgeVariants = cva(
         rose: "bg-rose-500 hover:bg-rose-600 text-white border-2 border-rose-100 text-nowrap flex items-center gap-1",
         slate:
           "bg-slate-500 hover:bg-slate-600 text-white border-2 border-slate-100 text-nowrap flex items-center gap-1",
-        gray: "bg-gray-500 hover:bg-gray-600 text-white border-2 border-gray-100 text-nowrap flex items-center gap-1",
+        gray: "bg-[#EEF6EF]0 hover:bg-gray-600 text-white border-2 border-gray-100 text-nowrap flex items-center gap-1",
         zinc: "bg-zinc-500 hover:bg-zinc-600 text-white border-2 border-zinc-100 text-nowrap flex items-center gap-1",
         neutral:
           "bg-neutral-500 hover:bg-neutral-600 text-white border-2 border-neutral-100 text-nowrap flex items-center gap-1",

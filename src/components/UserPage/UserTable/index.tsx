@@ -32,7 +32,7 @@ export const UserTable = ({
     <div className="w-full overflow-auto">
       <Table>
         <TableHeader>
-          <TableRow className="bg-green-50 hover:bg-gray-50">
+          <TableRow className="bg-green-50 hover:bg-[#EEF6EF]">
             <TableHead className="font-semibold text-gray-700 text-nowrap w-[60px]">
               STT
             </TableHead>
@@ -68,7 +68,7 @@ export const UserTable = ({
               return (
                 <TableRow
                   key={userId}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-[#EEF6EF] transition-colors"
                 >
                   <TableCell className="text-center font-medium text-gray-700">
                     {rowNumber}

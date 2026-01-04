@@ -93,56 +93,64 @@ export interface IUploadResponse {
 
 // Driver interfaces
 export interface IDriver {
-  _id?: string;
-  clerk_id?: string;
-  id?: number;
+  id: number;
   first_name: string;
   last_name: string;
-  email?: string;
-  phone_number?: string;
-  avatar?: string | null;
   profile_image_url?: string | null;
   car_image_url?: string | null;
-  car_seats?: number;
-  license_plate?: string;
-  vehicle_type?: string;
-  vehicle_model?: string;
-  vehicle_year?: number;
+  car_seats: number;
   rating?: number;
-  average_rating?: number;
+  vehicle_type: string;
   rating_count?: number;
-  total_rides?: number | string;
-  completed_rides?: number | string;
-  total_earnings?: number | string | null;
-  active?: boolean;
+  average_rating?: number;
+  clerk_id?: string;
+  email?: string;
+  phone?: string;
+  license_number?: string;
+  approval_status?: string;
+  status?: string;
+  total_rides?: number;
+  completed_rides?: number;
+  cancelled_rides?: number;
+  total_earnings?: number;
+  warning_count?: number;
+  current_latitude?: number;
+  current_longitude?: number;
+  last_location_update?: string;
   created_at?: string;
   updated_at?: string;
+  
+  // Legacy fields compatibility (optional)
+  _id?: string;
+  phone_number?: string; // mapping to phone
+  license_plate?: string; // mapping to license_number
+  active?: boolean;
 }
 
 export interface ICreateDriverBody {
-  clerk_id: string;
   first_name: string;
   last_name: string;
   email: string;
-  phone_number?: string;
-  avatar?: string;
-  license_plate?: string;
-  vehicle_type?: string;
-  vehicle_model?: string;
-  vehicle_year?: number;
-  active?: boolean;
+  phone?: string;
+  clerk_id?: string;
+  profile_image_url?: string;
+  car_image_url?: string;
+  car_seats: number;
+  vehicle_type: string;
+  license_number?: string;
 }
 
 export interface IUpdateDriverBody {
   first_name?: string;
   last_name?: string;
   email?: string;
-  phone_number?: string;
-  avatar?: string;
-  license_plate?: string;
+  phone?: string;
+  profile_image_url?: string;
+  car_image_url?: string;
+  car_seats?: number;
   vehicle_type?: string;
-  vehicle_model?: string;
-  vehicle_year?: number;
-  active?: boolean;
+  license_number?: string;
+  status?: string;
+  approval_status?: string;
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   MapPin,
   DollarSign,
@@ -14,6 +16,8 @@ import {
   MessageSquare,
   History,
   Car,
+  Edit,
+  X,
 } from "lucide-react";
 
 import type { IDriver } from "@/interface/auth";
@@ -24,34 +28,46 @@ interface DriverDetailsDialogProps {
   driver: IDriver | null;
   isOpen: boolean;
   onClose: () => void;
-  isEditMode: boolean;
+  isEditMode?: boolean;
 }
 
 export default function DriverDetailsDialog({
   driver,
   isOpen,
   onClose,
-  isEditMode,
+  isEditMode: initialEditMode = false,
 }: DriverDetailsDialogProps) {
+  const [isEditMode, setIsEditMode] = useState(initialEditMode);
+
+  const handleClose = () => {
+    setIsEditMode(false);
+    onClose();
+  };
+
+  const handleEditToggle = () => {
+    setIsEditMode(!isEditMode);
+  };
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         size="medium"
-        className="max-h-[90vh] overflow-y-auto bg-[#eee]"
+        className="max-h-[90vh] overflow-y-auto bg-[#EFF0F7]"
       >
         <DialogHeader>
-          <DialogTitle className="text-gray-700">
-            {isEditMode
-              ? driver
-                ? "Chỉnh sửa tài xế"
-                : "Thêm tài xế mới"
-              : "Chi tiết tài xế"}
-          </DialogTitle>
+          <div className="flex items-center justify-between w-full">
+            <DialogTitle className="text-gray-700">
+              {isEditMode
+                ? driver
+                  ? "Chỉnh sửa tài xế"
+                  : "Thêm tài xế mới"
+                : "Chi tiết tài xế"}
+            </DialogTitle>
+          </div>
         </DialogHeader>
 
         {isEditMode ? (
           <Card>
-            <DriverForm driver={driver} onClose={onClose} />
+            <DriverForm driver={driver} onClose={() => setIsEditMode(false)} />
           </Card>
         ) : (
           <div className="space-y-4">
@@ -171,7 +187,7 @@ export default function DriverDetailsDialog({
                       <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
                         <History size={24} className="text-gray-400" />
                       </div>
-                      <h4 className="font-medium text-gray-700 mb-1">
+                      <h4 className="font-semibold text-gray-700 mb-1">
                         Chưa có lịch sử chuyến đi
                       </h4>
                       <p className="text-sm text-gray-700 max-w-xs">
@@ -182,6 +198,17 @@ export default function DriverDetailsDialog({
                   </Card>
                 </div>
               </div>
+            </div>
+            <div className="flex w-full justify-end">
+              {!isEditMode && driver && (
+                <Button
+                  onClick={handleEditToggle}
+                  className="flex items-center gap-2"
+                >
+                  <Edit size={16} />
+                  Chỉnh sửa
+                </Button>
+              )}
             </div>
           </div>
         )}
