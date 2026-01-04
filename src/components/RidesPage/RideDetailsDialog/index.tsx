@@ -87,10 +87,10 @@ export default function RideDetailsDialog({
   const { mutate: updateRide, isPending } = useUpdateRide();
 
   const formatCurrency = (amount: number | undefined) => {
-    if (!amount) return "$0";
-    return new Intl.NumberFormat("en-US", {
+    if (!amount) return "0₫";
+    return new Intl.NumberFormat("vi-VN", {
       style: "currency",
-      currency: "USD",
+      currency: "VND",
       minimumFractionDigits: 0,
     }).format(amount);
   };

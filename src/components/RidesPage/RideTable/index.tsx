@@ -65,11 +65,11 @@ export default function RideTable({
   onPageChange,
 }: RideTableProps) {
   const formatCurrency = (amount: number | string | null | undefined) => {
-    if (!amount) return "$0";
+    if (!amount) return "0₫";
     const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("vi-VN", {
       style: "currency",
-      currency: "USD",
+      currency: "VND",
       minimumFractionDigits: 0,
     }).format(numAmount);
   };
