@@ -18,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <div className="bg-mainBackgroundV1 min-h-screen">
+        <div
+          className="bg-mainBackgroundV1 min-h-screen"
+          suppressHydrationWarning
+        >
           <ReactQueryClientProvider>
             <UserProvider>
               <ToastProvider />

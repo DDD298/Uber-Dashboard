@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 export default function NotFound() {
   const router = useRouter();
   return (
-    <div>
-      <div className="text-center mt-20">
+    <div suppressHydrationWarning>
+      <div className="text-center mt-20" suppressHydrationWarning>
         <h1 className="text-3xl font-semibold text-gray-700 mb-4">
           Page Not Found
         </h1>

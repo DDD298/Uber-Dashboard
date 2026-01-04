@@ -45,14 +45,14 @@ export default function LoginPage() {
   const validateForm = () => {
     const newErrors: typeof errors = {};
     if (!formData.email) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Email là bắt buộc";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = "Định dạng email không hợp lệ";
     }
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = "Mật khẩu là bắt buộc";
     } else if (formData.password && formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -77,7 +77,7 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        toast.error(data.message || "Login failed");
+        toast.error(data.message || "Đăng nhập thất bại");
         setIsPending(false);
         return;
       }
@@ -96,14 +96,14 @@ export default function LoginPage() {
         loginUser(data.data.user || data.data, data.data.accessToken);
       }
 
-      toast.success(data.message || "Login successful!");
+      toast.success(data.message || "Đăng nhập thành công!");
 
       setTimeout(() => {
         router.push("/admin");
       }, 100);
     } catch (error: any) {
       console.error("Login error:", error);
-      toast.error(error?.message || "Login failed");
+      toast.error(error?.message || "Đăng nhập thất bại");
       setIsPending(false);
     }
   };
@@ -145,10 +145,10 @@ export default function LoginPage() {
               {/* Header */}
               <div className="text-center space-y-3">
                 <h2 className="text-3xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent uppercase">
-                  Admin Portal
+                  Cổng Quản Trị
                 </h2>
                 <p className="text-gray-700 text-sm">
-                  Sign in to access the Uber admin dashboard
+                  Đăng nhập để truy cập bảng điều khiển quản trị Uber
                 </p>
               </div>
 
@@ -165,7 +165,7 @@ export default function LoginPage() {
                     htmlFor="email"
                     className="text-sm text-gray-700 uppercase tracking-wide"
                   >
-                    Admin Email
+                    Email Quản Trị
                   </Label>
                   <Input
                     id="email"
@@ -186,7 +186,7 @@ export default function LoginPage() {
                     htmlFor="password"
                     className="text-sm text-gray-700 uppercase tracking-wide"
                   >
-                    Password
+                    Mật khẩu
                   </Label>
                   <div className="relative">
                     <Input
@@ -227,14 +227,14 @@ export default function LoginPage() {
                       disabled={isPending}
                     />
                     <span className="text-sm text-gray-700 group-hover:text-gray-700 transition-colors">
-                      Remember me
+                      Ghi nhớ đăng nhập
                     </span>
                   </label>
                   <Link
                     href="/auth/forgot-password"
                     className="text-sm font-medium text-secondary transition-colors hover:underline"
                   >
-                    Forgot password?
+                    Quên mật khẩu?
                   </Link>
                 </div>
 
@@ -243,10 +243,10 @@ export default function LoginPage() {
                   {isPending ? (
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      Signing in...
+                      Đang đăng nhập...
                     </div>
                   ) : (
-                    "Sign In to Dashboard"
+                    "Đăng nhập"
                   )}
                 </Button>
 
@@ -255,8 +255,8 @@ export default function LoginPage() {
                   <div className="text-sm flex items-center justify-center gap-2 text-gray-700">
                     <Lock1 size="16" color="#7F8788" />
                     <span>
-                      Secure admin access only · Contact support if you need
-                      assistance
+                      Chỉ dành cho quyền truy cập bảo mật của admin · Liên hệ hỗ
+                      trợ nếu bạn cần trợ giúp
                     </span>
                   </div>
                 </div>
