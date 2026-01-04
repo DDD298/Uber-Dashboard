@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 import DriverTable from "./DriverTable";
 import DriverDetailsDialog from "./DriverDetailsDialog";
 import { DriverCreateDialog } from "./DriverCreateDialog";
@@ -26,6 +27,10 @@ export default function DriversPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
+  // Delete Dialog state
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
+
   const { data: driversData, isLoading } = useAdminDrivers({
     page: currentPage,
     limit: 10,
@@ -35,8 +40,10 @@ export default function DriversPage() {
   const deleteDriverMutation = useDeleteDriver();
 
   const handleEdit = (driverId: string) => {
-    const driver = driversData?.data.find(
-      (d: IDriver) =>
+    // Cast to IDriver explicitly to fix type mismatch
+    const drivers = (driversData?.data || []) as unknown as IDriver[];
+    const driver = drivers.find(
+      (d) =>
         d.clerk_id === driverId ||
         d._id === driverId ||
         String(d.id) === driverId
@@ -49,8 +56,10 @@ export default function DriversPage() {
   };
 
   const handleView = (driverId: string) => {
-    const driver = driversData?.data.find(
-      (d: IDriver) =>
+    // Cast to IDriver explicitly
+    const drivers = (driversData?.data || []) as unknown as IDriver[];
+    const driver = drivers.find(
+      (d) =>
         d.clerk_id === driverId ||
         d._id === driverId ||
         String(d.id) === driverId
@@ -63,8 +72,17 @@ export default function DriversPage() {
   };
 
   const handleDelete = async (driverId: string) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa tài xế này?")) {
-      deleteDriverMutation.mutate(driverId);
+    setDriverToDelete(driverId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (driverToDelete) {
+      await deleteDriverMutation.mutateAsync(driverToDelete);
+      // Dialog will be closed by onSuccess of mutation or manually here if needed,
+      // but DeleteDialog calls onClose automatically on success if we passed it correctly?
+      // Actually DeleteDialog implementation calls onClose() after onConfirm() succeeds.
+      // So we just need to return the promise.
     }
   };
 
@@ -82,7 +100,7 @@ export default function DriversPage() {
     setIsCreateDialogOpen(false);
   };
 
-  const drivers = driversData?.data || [];
+  const drivers = (driversData?.data || []) as unknown as IDriver[];
   const pagination = driversData?.pagination;
 
   return (
@@ -138,6 +156,19 @@ export default function DriversPage() {
       <DriverCreateDialog
         isOpen={isCreateDialogOpen}
         onClose={handleCloseCreateDialog}
+      />
+
+      <DeleteDialog
+        isOpen={isDeleteDialogOpen}
+        isDeleting={deleteDriverMutation.isPending}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Xóa tài xế"
+        description="Bạn có chắc chắn muốn xóa tài xế này? Hành động này không thể hoàn tác."
+        confirmText="Xóa"
+        successMessage="Xóa tài xế thành công"
+        errorMessage="Không thể xóa tài xế. Vui lòng thử lại."
+        warningMessage="Lưu ý: Không thể xóa tài xế nếu họ đã có lịch sử chuyến đi. Hãy thử vô hiệu hóa tài khoản thay thế."
       />
     </div>
   );

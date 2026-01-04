@@ -158,7 +158,11 @@ export default function DriverForm({ driver, onClose }: DriverFormProps) {
             <SelectContent>
               <SelectItem value="Car">Car</SelectItem>
               <SelectItem value="Bike">Bike</SelectItem>
-              <SelectItem value="Scooter">Scooter</SelectItem>
+              <SelectItem value="SUV">SUV</SelectItem>
+              <SelectItem value="Van">Van</SelectItem>
+              <SelectItem value="car">Car (Legacy)</SelectItem>
+              <SelectItem value="bike">Bike (Legacy)</SelectItem>
+              <SelectItem value="suv">SUV (Legacy)</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeSql } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 // GET - Get single driver with details
 export async function GET(
   _request: NextRequest,
@@ -95,9 +97,14 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  console.log("PATCH Request received for ID:", id);
   try {
     const driverId = parseInt(id);
+    console.log("Parsed Driver ID:", driverId);
+    
     const body = await _request.json();
+    console.log("Request Body:", body);
+    
     const {
       first_name,
       last_name,
@@ -151,6 +158,14 @@ export async function PATCH(
       updates.push(`status = $${paramIndex++}`);
       values.push(status);
     }
+    if (body.license_number !== undefined) {
+      updates.push(`license_number = $${paramIndex++}`);
+      values.push(body.license_number);
+    }
+    if (body.approval_status !== undefined) {
+      updates.push(`approval_status = $${paramIndex++}`);
+      values.push(body.approval_status);
+    }
 
     if (updates.length === 0) {
       return NextResponse.json(
@@ -161,6 +176,9 @@ export async function PATCH(
 
     values.push(driverId);
 
+    console.log(`Executing Update: UPDATE drivers SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`);
+    console.log("Values:", values);
+
     const result = await executeSql(
       `UPDATE drivers
        SET ${updates.join(", ")}
@@ -168,10 +186,23 @@ export async function PATCH(
        RETURNING *`,
       values
     );
+    
+    console.log("Update Result:", result);
 
     if (result.length === 0) {
       return NextResponse.json(
-        { success: false, error: "Driver not found" },
+        { 
+          success: false, 
+          error: "Driver not found",
+          debug: {
+            receivedId: id,
+            parsedId: driverId,
+            paramIndex,
+            updatesLength: updates.length,
+            valuesLength: values.length,
+            resultLength: result.length
+          }
+        },
         { status: 404 }
       );
     }
