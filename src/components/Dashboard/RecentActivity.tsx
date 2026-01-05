@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, User, Car } from "lucide-react";
+import { Clock, User, Car, MapPinIcon } from "lucide-react";
 import Link from "next/link";
-import { MapPinIcon } from "lucide-react";
+import { formatCurrency, formatTimestamp, formatAddress } from "@/lib/utils";
 
 interface RecentRide {
   ride_id: number;
@@ -59,35 +59,6 @@ export default function RecentActivity() {
           </Badge>
         );
     }
-  };
-
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 1) return "Vừa xong";
-    if (diffMins < 60) return `${diffMins} phút trước`;
-    if (diffHours < 24) return `${diffHours} giờ trước`;
-    if (diffDays < 7) return `${diffDays} ngày trước`;
-    return date.toLocaleDateString("vi-VN");
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const truncateAddress = (address: string, maxLength: number = 35) => {
-    if (address.length <= maxLength) return address;
-    return address.substring(0, maxLength) + "...";
   };
 
   return (
@@ -151,13 +122,13 @@ export default function RecentActivity() {
                     <div className="flex items-start gap-2 mb-1">
                       <div className="w-1.5 h-1.5 rounded-full bg-gray-900 mt-1.5 flex-shrink-0" />
                       <p className="text-sm font-semibold text-gray-700 line-clamp-1">
-                        {truncateAddress(ride.origin_address, 40)}
+                        {formatAddress(ride.origin_address)}
                       </p>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
                       <p className="text-sm text-gray-700 line-clamp-1">
-                        {truncateAddress(ride.destination_address, 40)}
+                        {formatAddress(ride.destination_address)}
                       </p>
                     </div>
                   </div>
@@ -167,7 +138,9 @@ export default function RecentActivity() {
                     {getStatusBadge(ride.ride_status)}
                     <div className="flex items-center gap-1 text-sm text-gray-700">
                       <Clock size={12} />
-                      <span>{formatTime(ride.created_at)}</span>
+                      <span>
+                        {formatTimestamp(new Date(ride.created_at).getTime())}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1 text-sm text-gray-700">
                       <User size={12} />
@@ -181,7 +154,7 @@ export default function RecentActivity() {
                   <div className="text-base font-semibold text-green-700">
                     {formatCurrency(Number(ride.fare_price))}
                   </div>
-                  <p className="text-sm text-gray-400 mt-0.5">
+                  <p className="text-sm text-gray-700 mt-0.5">
                     #{ride.ride_id}
                   </p>
                 </div>

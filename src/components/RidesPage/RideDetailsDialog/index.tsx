@@ -30,45 +30,11 @@ import { useState } from "react";
 import { useUpdateRide } from "@/hooks/useAdmin";
 import { toast } from "react-toastify";
 
-interface Ride {
-  id: number;
-  ride_id: string;
-  user?: {
-    clerk_id: string;
-    name: string;
-    email: string;
-  };
-  driver?: {
-    clerk_id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    vehicle_type?: string;
-    license_plate?: string;
-  };
-  origin_address: string;
-  destination_address: string;
-  origin_latitude: number;
-  origin_longitude: number;
-  destination_latitude: number;
-  destination_longitude: number;
-  ride_time: number;
-  fare_price: number;
-  final_price: number;
-  discount_amount?: number;
-  payment_status: "pending" | "completed" | "failed" | "refunded";
-  status: "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
-  created_at: string;
-  started_at?: string;
-  completed_at?: string;
-  cancelled_at?: string;
-  cancellation_reason?: string;
-  driver_rating?: number;
-  user_rating?: number;
-}
+import { IRide } from "@/interface/ride";
+import { formatCurrency, formatDate } from "@/lib/utils";
 
 interface RideDetailsDialogProps {
-  ride: Ride | null;
+  ride: IRide | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -85,26 +51,6 @@ export default function RideDetailsDialog({
   );
 
   const { mutate: updateRide, isPending } = useUpdateRide();
-
-  const formatCurrency = (amount: number | undefined) => {
-    if (!amount) return "0₫";
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleString("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   const handleSave = () => {
     if (!ride) return;
@@ -333,7 +279,7 @@ export default function RideDetailsDialog({
               </div>
               <div>
                 <p className="text-sm text-gray-700 flex items-center gap-1">
-                  <Clock size={14} />
+                  <Clock size={16} />
                   Thời gian dự kiến
                 </p>
                 <p className="font-medium text-gray-700 ml-4">

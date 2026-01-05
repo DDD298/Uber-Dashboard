@@ -202,7 +202,7 @@ export default function LoginPage() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={isPending}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-700"
                     >
                       {showPassword ? (
                         <EyeSlash size="20" color="currentColor" />

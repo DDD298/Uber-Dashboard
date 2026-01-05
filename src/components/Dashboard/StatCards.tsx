@@ -12,6 +12,7 @@ import {
   CheckCircle,
   Banknote,
 } from "lucide-react";
+import { formatCurrency, formatNumber } from "@/lib/utils";
 
 interface StatCardsProps {
   stats: {
@@ -63,7 +64,6 @@ const StatCard = ({
     >
       <Link href={link}>
         <Card className="group cursor-pointer relative overflow-hidden p-5 h-full flex flex-col bg-white transition-all duration-300 shadow-md border border-gray-100">
-          {/* Header with title and icon */}
           <div className="flex items-center justify-between">
             <h3 className="text-sm text-green-600 font-semibold uppercase tracking-wide">
               {title}
@@ -80,7 +80,7 @@ const StatCard = ({
             <p className="text-3xl font-semibold text-gray-700">{value}</p>
             {trendValue && (
               <div className="flex items-center gap-1.5 mt-auto pt-2">
-                <TrendingUp size={14} className="text-green-700" />
+                <TrendingUp size={16} className="text-green-700" />
                 <span className="text-sm font-semibold text-green-700">
                   {trendValue}
                 </span>
@@ -95,8 +95,6 @@ const StatCard = ({
               </p>
             )}
           </div>
-
-          {/* Trend indicator */}
         </Card>
       </Link>
     </motion.div>
@@ -104,19 +102,6 @@ const StatCard = ({
 };
 
 export default function StatCards({ stats, period }: StatCardsProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat("vi-VN").format(num);
-  };
-
   const calculateCompletionRate = () => {
     if (stats.total_rides === 0) return "0%";
     return ((stats.completed_rides / stats.total_rides) * 100).toFixed(1) + "%";

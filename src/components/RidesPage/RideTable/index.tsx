@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { IconTrash, IconMenu3, IconMapPin } from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { formatCurrency, formatDate, getStatusVariant } from "@/lib/utils";
 
 interface Ride {
   id: number;
@@ -64,59 +65,29 @@ export default function RideTable({
   currentPage,
   onPageChange,
 }: RideTableProps) {
-  const formatCurrency = (amount: number | string | null | undefined) => {
-    if (!amount) return "0₫";
-    const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-    }).format(numAmount);
-  };
-
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <Badge variant="green">Hoàn thành</Badge>;
-      case "in_progress":
-        return <Badge variant="blue">Đang đi</Badge>;
-      case "accepted":
-        return <Badge variant="blue">Đã nhận</Badge>;
-      case "pending":
-        return <Badge variant="yellow">Chờ xác nhận</Badge>;
-      case "cancelled":
-        return <Badge variant="red">Đã hủy</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
-    }
+    const variant = getStatusVariant(status);
+    const labels: Record<string, string> = {
+      completed: "Hoàn thành",
+      in_progress: "Đang đi",
+      accepted: "Đã nhận",
+      pending: "Chờ xác nhận",
+      cancelled: "Đã hủy",
+    };
+    return <Badge variant={variant as any}>{labels[status] || status}</Badge>;
   };
 
   const getPaymentStatusBadge = (status: string) => {
-    switch (status) {
-      case "paid":
-      case "completed":
-        return <Badge variant="green">Đã thanh toán</Badge>;
-      case "pending":
-        return <Badge variant="yellow">Chờ thanh toán</Badge>;
-      case "failed":
-        return <Badge variant="red">Thất bại</Badge>;
-      case "refunded":
-        return <Badge variant="blue">Đã hoàn tiền</Badge>;
-      case "cancelled":
-        return <Badge variant="red">Đã hủy</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const variant = getStatusVariant(status);
+    const labels: Record<string, string> = {
+      paid: "Đã thanh toán",
+      completed: "Đã thanh toán",
+      pending: "Chờ thanh toán",
+      failed: "Thất bại",
+      refunded: "Đã hoàn tiền",
+      cancelled: "Đã hủy",
+    };
+    return <Badge variant={variant as any}>{labels[status] || status}</Badge>;
   };
 
   if (isLoading) {

@@ -10,7 +10,7 @@ const badgeVariants = cva(
       variant: {
         default: "border-transparent -foreground text-nowrap",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-white text-nowrap",
+          "border-2 border-[#D1EAD6] bg-[#F0F7F1] text-green-600 hover:bg-[#F0F7F1]/80 text-nowrap text-nowrap flex items-center gap-1",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80 text-nowrap",
         outline:
@@ -43,7 +43,7 @@ const badgeVariants = cva(
         rose: "bg-rose-500 hover:bg-rose-600 text-white border-2 border-rose-100 text-nowrap flex items-center gap-1",
         slate:
           "bg-slate-500 hover:bg-slate-600 text-white border-2 border-slate-100 text-nowrap flex items-center gap-1",
-        gray: "bg-[#EEF6EF]0 hover:bg-gray-600 text-white border-2 border-gray-100 text-nowrap flex items-center gap-1",
+        gray: "bg-[#EEF6EF] hover:bg-gray-600 text-white border-2 border-gray-100 text-nowrap flex items-center gap-1",
         zinc: "bg-zinc-500 hover:bg-zinc-600 text-white border-2 border-zinc-100 text-nowrap flex items-center gap-1",
         neutral:
           "bg-neutral-500 hover:bg-neutral-600 text-white border-2 border-neutral-100 text-nowrap flex items-center gap-1",

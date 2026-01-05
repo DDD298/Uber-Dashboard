@@ -22,12 +22,11 @@ import type { IDriver } from "@/interface/auth";
 export default function DriversPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedDriver, setSelectedDriver] = useState<IDriver | null>(null);
+  const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // Delete Dialog state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
 
@@ -40,35 +39,15 @@ export default function DriversPage() {
   const deleteDriverMutation = useDeleteDriver();
 
   const handleEdit = (driverId: string) => {
-    // Cast to IDriver explicitly to fix type mismatch
-    const drivers = (driversData?.data || []) as unknown as IDriver[];
-    const driver = drivers.find(
-      (d) =>
-        d.clerk_id === driverId ||
-        d._id === driverId ||
-        String(d.id) === driverId
-    );
-    if (driver) {
-      setSelectedDriver(driver);
-      setIsEditMode(true);
-      setIsDetailsDialogOpen(true);
-    }
+    setSelectedDriverId(driverId);
+    setIsEditMode(true);
+    setIsDetailsDialogOpen(true);
   };
 
   const handleView = (driverId: string) => {
-    // Cast to IDriver explicitly
-    const drivers = (driversData?.data || []) as unknown as IDriver[];
-    const driver = drivers.find(
-      (d) =>
-        d.clerk_id === driverId ||
-        d._id === driverId ||
-        String(d.id) === driverId
-    );
-    if (driver) {
-      setSelectedDriver(driver);
-      setIsEditMode(false);
-      setIsDetailsDialogOpen(true);
-    }
+    setSelectedDriverId(driverId);
+    setIsEditMode(false);
+    setIsDetailsDialogOpen(true);
   };
 
   const handleDelete = async (driverId: string) => {
@@ -79,10 +58,6 @@ export default function DriversPage() {
   const handleConfirmDelete = async () => {
     if (driverToDelete) {
       await deleteDriverMutation.mutateAsync(driverToDelete);
-      // Dialog will be closed by onSuccess of mutation or manually here if needed,
-      // but DeleteDialog calls onClose automatically on success if we passed it correctly?
-      // Actually DeleteDialog implementation calls onClose() after onConfirm() succeeds.
-      // So we just need to return the promise.
     }
   };
 
@@ -92,7 +67,7 @@ export default function DriversPage() {
 
   const handleCloseDetailsDialog = () => {
     setIsDetailsDialogOpen(false);
-    setSelectedDriver(null);
+    setSelectedDriverId(null);
     setIsEditMode(false);
   };
 
@@ -119,7 +94,7 @@ export default function DriversPage() {
 
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
           <Input
             type="text"
             placeholder="Tìm kiếm theo tên hoặc email..."
@@ -147,7 +122,7 @@ export default function DriversPage() {
       />
 
       <DriverDetailsDialog
-        driver={selectedDriver}
+        driverId={selectedDriverId}
         isOpen={isDetailsDialogOpen}
         onClose={handleCloseDetailsDialog}
         isEditMode={isEditMode}

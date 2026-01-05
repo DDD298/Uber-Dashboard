@@ -163,7 +163,7 @@ export default function UserPage() {
                 <div className="flex flex-col gap-4">
                   {[...Array(5)].map((_, index) => (
                     <div key={index} className="flex items-center gap-4">
-                      <Skeleton className="h-8 w-8 rounded-full" />
+                      <Skeleton className="w-10 h-10 rounded-full" />
                       <div className="space-y-2">
                         <Skeleton className="h-4 w-48" />
                         <Skeleton className="h-4 w-24" />

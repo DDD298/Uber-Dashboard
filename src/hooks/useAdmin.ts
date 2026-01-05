@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { IDriver } from "@/interface/auth";
+import { IRide } from "@/interface/ride";
 
 // Types
 interface User {
@@ -170,28 +172,9 @@ export const useDeleteUser = () => {
   });
 };
 
-// Driver hooks
-interface Driver {
-  clerk_id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number?: string;
-  license_plate?: string;
-  vehicle_type?: string;
-  vehicle_model?: string;
-  vehicle_year?: number;
-  average_rating?: number;
-  rating_count?: number;
-  total_rides?: number;
-  total_earnings?: number;
-  active?: boolean;
-  created_at?: string;
-}
-
 interface DriversResponse {
   success: boolean;
-  data: Driver[];
+  data: IDriver[];
   pagination: {
     page: number;
     limit: number;
@@ -202,7 +185,7 @@ interface DriversResponse {
 
 interface DriverResponse {
   success: boolean;
-  data: Driver;
+  data: IDriver;
 }
 
 interface CreateDriverData {
@@ -708,50 +691,10 @@ export const useUpdateTicketStatus = () => {
 };
 
 // Ride hooks
-interface Ride {
-  id: number;
-  ride_id: string;
-  user_id: string;
-  driver_id: string;
-  user?: {
-    clerk_id: string;
-    name: string;
-    email: string;
-  };
-  driver?: {
-    clerk_id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    vehicle_type?: string;
-    license_plate?: string;
-  };
-  origin_address: string;
-  destination_address: string;
-  origin_latitude: number;
-  origin_longitude: number;
-  destination_latitude: number;
-  destination_longitude: number;
-  ride_time: number;
-  fare_price: number;
-  payment_status: 'pending' | 'completed' | 'failed' | 'refunded';
-  status: 'pending' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
-  promo_code_id?: number;
-  discount_amount?: number;
-  final_price: number;
-  created_at: string;
-  updated_at: string;
-  started_at?: string;
-  completed_at?: string;
-  cancelled_at?: string;
-  cancellation_reason?: string;
-  driver_rating?: number;
-  user_rating?: number;
-}
 
 interface RidesResponse {
   success: boolean;
-  data: Ride[];
+  data: IRide[];
   pagination: {
     page: number;
     limit: number;
@@ -762,7 +705,7 @@ interface RidesResponse {
 
 interface RideResponse {
   success: boolean;
-  data: Ride;
+  data: IRide;
 }
 
 interface RidesQueryParams {
@@ -776,8 +719,8 @@ interface RidesQueryParams {
 }
 
 interface UpdateRideData {
-  status?: Ride['status'];
-  payment_status?: Ride['payment_status'];
+  status?: IRide['status'];
+  payment_status?: IRide['payment_status'];
   driver_id?: string;
   cancellation_reason?: string;
   driver_rating?: number;
@@ -785,7 +728,6 @@ interface UpdateRideData {
   notes?: string;
 }
 
-// Fetch rides list
 export const useAdminRides = (params: RidesQueryParams = {}) => {
   const queryParams = new URLSearchParams();
   

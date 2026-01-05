@@ -254,7 +254,7 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
                 }).format(totalRevenue)}
               </p>
               <div className="flex items-center gap-1 text-green-700 text-sm font-medium mb-1">
-                <TrendingUp size={14} />
+                <TrendingUp size={16} />
                 <span>+{revenueGrowth}%</span>
               </div>
             </div>
@@ -268,7 +268,7 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
                 {totalRides.toLocaleString("vi-VN")} chuyến
               </p>
               <div className="flex items-center gap-1 text-green-700 text-sm font-medium mb-1">
-                <TrendingUp size={14} />
+                <TrendingUp size={16} />
                 <span>+{ridesGrowth}%</span>
               </div>
             </div>

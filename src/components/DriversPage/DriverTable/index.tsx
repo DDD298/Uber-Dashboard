@@ -14,6 +14,7 @@ import { IconTrash, IconMenu3, IconCar } from "@tabler/icons-react";
 import type { IDriver } from "@/interface/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { formatCurrency } from "@/lib/utils";
 
 interface DriverTableProps {
   drivers: IDriver[];
@@ -41,16 +42,6 @@ export default function DriverTable({
   currentPage,
   onPageChange,
 }: DriverTableProps) {
-  const formatCurrency = (amount: number | string | null | undefined) => {
-    if (!amount) return "0₫";
-    const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-    }).format(numAmount);
-  };
-
   const getVehicleTypeBadge = (type: string) => {
     if (type === "Bike") {
       return <Badge variant="blue">Xe máy</Badge>;
@@ -152,7 +143,7 @@ export default function DriverTable({
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <IconCar className="h-4 w-4 text-gray-400" />
+                        <IconCar className="h-4 w-4 text-gray-600" />
                         <span className="text-gray-700">
                           {driver.car_seats || 4}
                         </span>
@@ -166,7 +157,7 @@ export default function DriverTable({
                             ? Number(driver.average_rating).toFixed(2)
                             : "5.00"}
                         </span>
-                        <span className="text-sm text-gray-400">
+                        <span className="text-sm text-gray-600">
                           ({driver.rating_count || 0})
                         </span>
                       </div>

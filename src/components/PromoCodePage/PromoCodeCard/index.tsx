@@ -17,8 +17,8 @@ import {
   IconCalendar,
   IconUsers,
 } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { PromoCode } from "../types";
+import { formatCurrency, formatDate } from "@/lib/utils";
 
 interface PromoCodeCardProps {
   promoCode: PromoCode;
@@ -31,21 +31,6 @@ export default function PromoCodeCard({
   onEdit,
   onDelete,
 }: PromoCodeCardProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), "dd/MM/yyyy");
-    } catch {
-      return dateString;
-    }
-  };
-
   const isExpired = (endDate: string) => {
     return new Date(endDate) < new Date();
   };

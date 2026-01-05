@@ -34,13 +34,13 @@ const getVariantClasses = (variant?: string): string => {
 const getSizeClasses = (size?: string): string => {
   switch (size) {
     case "default":
-      return "h-8 w-8 p-1";
+      return "w-10 h-10 p-1";
     case "sm":
       return "h-6 w-6 p-0.5";
     case "lg":
       return "h-10 w-10 p-1.5";
     default:
-      return "h-8 w-8 p-1";
+      return "w-10 h-10 p-1";
   }
 };
 

@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, TrendingUp, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { formatCurrency } from "@/lib/utils";
 
 interface TopDriversProps {
   drivers: Array<{
@@ -16,15 +17,6 @@ interface TopDriversProps {
 }
 
 export default function TopDrivers({ drivers }: TopDriversProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
@@ -106,11 +98,11 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
                       <span className="font-medium text-gray-700">
                         {Number(driver.average_rating).toFixed(2)}
                       </span>
-                      <span className="text-gray-400">
+                      <span className="text-gray-600">
                         ({driver.rating_count})
                       </span>
                     </div>
-                    <span className="text-gray-400">•</span>
+                    <span className="text-gray-600">•</span>
                     <span className="text-gray-700">
                       {driver.total_rides} chuyến
                     </span>
@@ -122,7 +114,7 @@ export default function TopDrivers({ drivers }: TopDriversProps) {
                   <p className="font-semibold text-green-700 text-base">
                     {formatCurrency(Number(driver.total_earnings))}
                   </p>
-                  <p className="text-sm text-gray-400">thu nhập</p>
+                  <p className="text-sm text-gray-600">thu nhập</p>
                 </div>
               </div>
             </Link>

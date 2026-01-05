@@ -108,7 +108,7 @@ export default function RidesPage() {
 
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
           <Input
             type="text"
             placeholder="Tìm kiếm theo mã chuyến, khách hàng, tài xế..."

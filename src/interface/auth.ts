@@ -7,9 +7,9 @@ export interface IDepartment {
 }
 
 export interface IUser {
-  _id?: string; // For compatibility with old code
-  clerk_id: string; // Primary identifier from the API
-  id?: string; // Some endpoints use id, others use _id
+  _id?: string;
+  clerk_id: string;
+  id?: string;
   phone?: string;
   email: string;
   name: string;
@@ -20,11 +20,9 @@ export interface IUser {
   created_at?: string;
   createdAt?: string;
   updatedAt?: string;
-  // Additional fields from the users API
   total_rides?: number;
   completed_rides?: number;
   total_spent?: number;
-  // Additional fields for admin user management (legacy)
   studentId?: string;
   fullName?: string;
   phoneNumber?: string;
@@ -48,13 +46,11 @@ export interface IProfileResponse {
   data: IUser;
 }
 
-// Request interfaces for user management
 export interface ICreateUserBody {
   clerk_id: string;
   name: string;
   email: string;
   phone?: string;
-  // Legacy fields for compatibility
   password?: string;
   studentId?: string;
   fullName?: string;
@@ -69,7 +65,6 @@ export interface IUpdateUserBody {
   name?: string;
   email?: string;
   phone?: string;
-  // Legacy fields for compatibility
   password?: string;
   studentId?: string;
   fullName?: string;
@@ -114,16 +109,18 @@ export interface IDriver {
   cancelled_rides?: number;
   total_earnings?: number;
   warning_count?: number;
-  current_latitude?: number;
-  current_longitude?: number;
-  last_location_update?: string;
+  total_warnings?: number | string;
+  active_warnings?: number | string;
+  current_latitude?: number | null;
+  current_longitude?: number | null;
+  last_location_update?: string | null;
+  recentRides?: any[];
+  recentRatings?: any[];
   created_at?: string;
   updated_at?: string;
-  
-  // Legacy fields compatibility (optional)
   _id?: string;
-  phone_number?: string; // mapping to phone
-  license_plate?: string; // mapping to license_number
+  phone_number?: string;
+  license_plate?: string;
   active?: boolean;
 }
 
