@@ -26,7 +26,7 @@ import {
   formatRelativeTime,
   getStatusVariant,
   getPriorityVariant,
-} from "@/lib/formatters";
+} from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { IconSearch, IconX } from "@tabler/icons-react";
 
