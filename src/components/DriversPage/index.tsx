@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconPlus, IconRefresh, IconSearch } from "@tabler/icons-react";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import DriverTable from "./DriverTable";
 import DriverDetailsDialog from "./DriverDetailsDialog";
@@ -29,8 +29,13 @@ export default function DriversPage() {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data: driversData, isLoading } = useAdminDrivers({
+  const {
+    data: driversData,
+    isLoading,
+    refetch,
+  } = useAdminDrivers({
     page: currentPage,
     limit: 10,
     search: searchQuery,
@@ -75,6 +80,17 @@ export default function DriversPage() {
     setIsCreateDialogOpen(false);
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+      // Đảm bảo animation xoay hiển thị ít nhất 500ms để người dùng thấy
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const drivers = (driversData?.data || []) as unknown as IDriver[];
   const pagination = driversData?.pagination;
 
@@ -104,10 +120,24 @@ export default function DriversPage() {
           />
         </div>
 
-        <Button onClick={handleAddDriver} className="gap-2">
-          <IconPlus className="h-4 w-4" />
-          Thêm tài xế
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleRefresh}
+            variant="outline"
+            className="gap-2"
+            disabled={isRefreshing}
+          >
+            <IconRefresh
+              className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            Làm mới
+          </Button>
+
+          <Button onClick={handleAddDriver} className="gap-2">
+            <IconPlus className="h-4 w-4" />
+            Thêm tài xế
+          </Button>
+        </div>
       </div>
 
       <DriverTable
