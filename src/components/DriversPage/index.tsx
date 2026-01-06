@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { IconPlus, IconRefresh, IconSearch } from "@tabler/icons-react";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import DriverTable from "./DriverTable";
@@ -22,6 +29,7 @@ import type { IDriver } from "@/interface/auth";
 export default function DriversPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [approvalStatus, setApprovalStatus] = useState<string>("all");
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -39,6 +47,7 @@ export default function DriversPage() {
     page: currentPage,
     limit: 10,
     search: searchQuery,
+    approval_status: approvalStatus === "all" ? undefined : approvalStatus,
   });
 
   const deleteDriverMutation = useDeleteDriver();
@@ -109,15 +118,29 @@ export default function DriversPage() {
       </Breadcrumb>
 
       <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
-          <Input
-            type="text"
-            placeholder="Tìm kiếm theo tên hoặc email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+        <div className="flex items-center gap-3 flex-1">
+          <div className="relative flex-1 max-w-md">
+            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
+            <Input
+              type="text"
+              placeholder="Tìm kiếm theo tên hoặc email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          <Select value={approvalStatus} onValueChange={setApprovalStatus}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Trạng thái duyệt" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tất cả trạng thái</SelectItem>
+              <SelectItem value="pending">Chờ duyệt</SelectItem>
+              <SelectItem value="approved">Đã duyệt</SelectItem>
+              <SelectItem value="rejected">Từ chối</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex gap-2">

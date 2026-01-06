@@ -51,6 +51,7 @@ interface UsersQueryParams {
   role?: string;
   sortBy?: string;
   sortOrder?: string;
+  approval_status?: string;
 }
 
 // Fetch users list
@@ -221,6 +222,7 @@ export const useAdminDrivers = (params: UsersQueryParams = {}) => {
   if (params.search) queryParams.append("search", params.search);
   if (params.sortBy) queryParams.append("sortBy", params.sortBy);
   if (params.sortOrder) queryParams.append("sortOrder", params.sortOrder);
+  if (params.approval_status) queryParams.append("approval_status", params.approval_status);
 
   return useQuery<DriversResponse>({
     queryKey: ["admin-drivers", params],
