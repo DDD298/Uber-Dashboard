@@ -93,7 +93,6 @@ export default function DriversPage() {
     setIsRefreshing(true);
     try {
       await refetch();
-      // Đảm bảo animation xoay hiển thị ít nhất 500ms để người dùng thấy
       await new Promise((resolve) => setTimeout(resolve, 500));
     } finally {
       setIsRefreshing(false);

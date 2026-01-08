@@ -71,10 +71,24 @@ export async function GET(request: NextRequest) {
     );
     const total = parseInt(countResult[0].total);
 
-    // Get rides with driver and user info
+    // Get rides with driver info
     const rides = await executeSql(
-      `SELECT 
-        r.*,
+      `SELECT
+        r.ride_id,
+        r.origin_address,
+        r.destination_address,
+        r.origin_latitude,
+        r.origin_longitude,
+        r.destination_latitude,
+        r.destination_longitude,
+        r.ride_time,
+        r.fare_price,
+        r.payment_status,
+        r.payment_intent_id,
+        r.user_id,
+        r.created_at,
+        r.cancelled_at,
+        r.cancel_reason,
         json_build_object(
           'driver_id', d.id,
           'first_name', d.first_name,
@@ -82,27 +96,10 @@ export async function GET(request: NextRequest) {
           'profile_image_url', d.profile_image_url,
           'car_image_url', d.car_image_url,
           'car_seats', d.car_seats,
-          'rating', d.rating,
-          'vehicle_type', d.vehicle_type
-        ) as driver,
-        json_build_object(
-          'clerk_id', u.clerk_id,
-          'name', u.name,
-          'email', u.email
-        ) as user,
-        CASE 
-          WHEN rat.id IS NOT NULL THEN json_build_object(
-            'id', rat.id,
-            'stars', rat.stars,
-            'comment', rat.comment,
-            'created_at', rat.created_at
-          )
-          ELSE NULL
-        END as rating
+          'rating', d.rating
+        ) AS driver
       FROM rides r
-      INNER JOIN drivers d ON r.driver_id = d.id
-      INNER JOIN users u ON r.user_id = u.clerk_id
-      LEFT JOIN ratings rat ON r.ride_id = rat.ride_id
+      JOIN drivers d ON r.driver_id = d.id
       ${whereClause}
       ORDER BY r.created_at DESC
       LIMIT $${paramIndex}
