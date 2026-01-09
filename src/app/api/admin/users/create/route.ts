@@ -54,10 +54,10 @@ export async function POST(request: NextRequest) {
     const clerkUser = await clerkResponse.json();
     const clerk_id = clerkUser.id;
 
-    // Create user in database (without phone - column doesn't exist)
+    // Create user in database
     const result = await executeSql(
-      `INSERT INTO users (clerk_id, name, email, created_at)
-       VALUES ($1, $2, $3, NOW())
+      `INSERT INTO users (clerk_id, name, email)
+       VALUES ($1, $2, $3)
        RETURNING *`,
       [clerk_id, name, email]
     );
