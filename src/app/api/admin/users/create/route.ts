@@ -7,15 +7,20 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, password } = body;
+    const { name, email, phone } = body;
 
     // Validate required fields
-    if (!name || !email || !password) {
+    if (!name || !email) {
       return NextResponse.json(
-        { success: false, error: "Name, email, and password are required" },
+        { success: false, error: "Name and email are required" },
         { status: 400 }
       );
     }
+
+    // Generate a random secure password for Clerk (user can reset via email)
+    const randomPassword = Math.random().toString(36).slice(-12) + 
+                          Math.random().toString(36).slice(-12) + 
+                          "A1!"; // Ensure it meets password requirements
 
     // Create user in Clerk
     const clerkResponse = await fetch("https://api.clerk.com/v1/users", {
@@ -26,7 +31,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         email_address: [email],
-        password: password,
+        password: randomPassword,
         first_name: name.split(" ")[0] || name,
         last_name: name.split(" ").slice(1).join(" ") || "",
         // Note: phone_number not included - Vietnam (+84) not supported by Clerk
