@@ -119,14 +119,20 @@ export default function LoginPage() {
       suppressHydrationWarning
     >
       {/* Background decorative shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-3xl opacity-60" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-600 rounded-full blur-3xl opacity-40" />
+      <div
+        className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-3xl opacity-60"
+        suppressHydrationWarning
+      />
+      <div
+        className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-600 rounded-full blur-3xl opacity-40"
+        suppressHydrationWarning
+      />
 
       <div
         className="w-full max-w-5xl bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden relative z-10"
         suppressHydrationWarning
       >
-        <div className="grid lg:grid-cols-2">
+        <div className="grid lg:grid-cols-2" suppressHydrationWarning>
           {/* Left Panel - Welcome Section */}
           <div
             style={{
@@ -135,15 +141,25 @@ export default function LoginPage() {
               backgroundPosition: "center",
             }}
             className="p-8 relative overflow-hidden"
+            suppressHydrationWarning
           >
-            <div className="absolute top-20 right-0 w-64 h-64 bg-teal-400 rounded-full opacity-40 blur-2xl" />
+            <div
+              className="absolute top-20 right-0 w-64 h-64 bg-teal-400 rounded-full opacity-40 blur-2xl"
+              suppressHydrationWarning
+            />
           </div>
 
           {/* Right Form */}
-          <div className="p-8 flex flex-col justify-center bg-gradient-to-br from-white to-gray-50">
-            <div className="max-w-md mx-auto w-full space-y-8">
+          <div
+            className="p-8 flex flex-col justify-center bg-gradient-to-br from-white to-gray-50"
+            suppressHydrationWarning
+          >
+            <div
+              className="max-w-md mx-auto w-full space-y-8"
+              suppressHydrationWarning
+            >
               {/* Header */}
-              <div className="text-center space-y-3">
+              <div className="text-center space-y-3" suppressHydrationWarning>
                 <h2 className="text-3xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent uppercase">
                   Cổng Quản Trị
                 </h2>
@@ -155,12 +171,15 @@ export default function LoginPage() {
               {/* Form */}
               <form className="space-y-4" onSubmit={handleSubmit}>
                 {errors.general && (
-                  <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                  <div
+                    className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm"
+                    suppressHydrationWarning
+                  >
                     {errors.general}
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className="space-y-2" suppressHydrationWarning>
                   <Label
                     htmlFor="email"
                     className="text-sm text-gray-700 uppercase tracking-wide"
@@ -181,14 +200,14 @@ export default function LoginPage() {
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2" suppressHydrationWarning>
                   <Label
                     htmlFor="password"
                     className="text-sm text-gray-700 uppercase tracking-wide"
                   >
                     Mật khẩu
                   </Label>
-                  <div className="relative">
+                  <div className="relative" suppressHydrationWarning>
                     <Input
                       id="password"
                       name="password"
@@ -219,7 +238,10 @@ export default function LoginPage() {
                 </div>
 
                 {/* Remember Me & Forgot Password */}
-                <div className="flex items-center justify-between">
+                <div
+                  className="flex items-center justify-between"
+                  suppressHydrationWarning
+                >
                   <label className="flex items-center gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -241,7 +263,10 @@ export default function LoginPage() {
                 {/* Login Button */}
                 <Button type="submit" disabled={isPending} className="w-full">
                   {isPending ? (
-                    <div className="flex items-center justify-center gap-2">
+                    <div
+                      className="flex items-center justify-center gap-2"
+                      suppressHydrationWarning
+                    >
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Đang đăng nhập...
                     </div>
@@ -251,8 +276,14 @@ export default function LoginPage() {
                 </Button>
 
                 {/* Security Notice */}
-                <div className="text-center pt-4 border-t border-gray-200">
-                  <div className="text-sm flex items-center justify-center gap-2 text-gray-700">
+                <div
+                  className="text-center pt-4 border-t border-gray-200"
+                  suppressHydrationWarning
+                >
+                  <div
+                    className="text-sm flex items-center justify-center gap-2 text-gray-700"
+                    suppressHydrationWarning
+                  >
                     <Lock1 size="16" color="#7F8788" />
                     <span>
                       Chỉ dành cho quyền truy cập bảo mật của admin · Liên hệ hỗ

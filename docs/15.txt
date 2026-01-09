@@ -1,0 +1,451 @@
+15. ADMIN DASHBOARD - TÀI LIỆU TOÀN BỘ HỆ THỐNG
+
+15.1. CƠ SỞ DỮ LIỆU
+
+15.1.1. BẢNG USERS (Người dùng)
+TABLE users (
+  clerk_id VARCHAR(255) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  avatar TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+- Mục đích: Lưu trữ thông tin người dùng/khách hàng
+- Quan hệ:
+  + clerk_id -> rides.user_id (1-N): Một user có nhiều chuyến đi
+  + clerk_id -> ratings.user_id (1-N): Một user có nhiều đánh giá
+
+15.1.2. BẢNG DRIVERS (Tài xế)
+TABLE drivers (
+  id SERIAL PRIMARY KEY,
+  clerk_id VARCHAR(255),
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  phone VARCHAR(20),
+  profile_image_url TEXT,
+  car_image_url TEXT,
+  car_seats INTEGER DEFAULT 4,
+  vehicle_type VARCHAR(50) DEFAULT 'Car',
+  license_plate VARCHAR(50),
+  rating DECIMAL(3,2) DEFAULT 5.0,
+  rating_count INTEGER DEFAULT 0,
+  average_rating DECIMAL(3,2) DEFAULT 5.0,
+  approval_status VARCHAR(20) DEFAULT 'pending',
+  status VARCHAR(20) DEFAULT 'pending',
+  total_trips INTEGER DEFAULT 0,
+  completed_trips INTEGER DEFAULT 0,
+  cancelled_trips INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+- Mục đích: Lưu trữ thông tin tài xế
+- Trạng thái approval_status: pending, approved, rejected
+- Trạng thái status: pending, active, inactive, suspended
+- Quan hệ:
+  + id -> rides.driver_id (1-N): Một tài xế có nhiều chuyến đi
+  + id -> ratings.driver_id (1-N): Một tài xế nhận nhiều đánh giá
+
+15.1.3. BẢNG RIDES (Chuyến đi)
+TABLE rides (
+  ride_id SERIAL PRIMARY KEY,
+  origin_address TEXT NOT NULL,
+  destination_address TEXT NOT NULL,
+  origin_latitude DECIMAL(10,8),
+  origin_longitude DECIMAL(11,8),
+  destination_latitude DECIMAL(10,8),
+  destination_longitude DECIMAL(11,8),
+  ride_time INTEGER,
+  fare_price DECIMAL(10,2) NOT NULL,
+  final_price DECIMAL(10,2),
+  payment_status VARCHAR(20) DEFAULT 'pending',
+  payment_intent_id VARCHAR(255),
+  driver_id INTEGER REFERENCES drivers(id),
+  user_id VARCHAR(255) REFERENCES users(clerk_id),
+  ride_status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  cancelled_at TIMESTAMP,
+  cancel_reason TEXT
+);
+- Mục đích: Lưu trữ thông tin chuyến đi
+- Trạng thái ride_status: pending, confirmed, accepted, in_progress, completed, cancelled
+- Trạng thái payment_status: pending, paid, failed, refunded
+- Quan hệ:
+  + user_id -> users.clerk_id (N-1)
+  + driver_id -> drivers.id (N-1)
+  + ride_id -> ratings.ride_id (1-1)
+
+15.1.4. BẢNG RATINGS (Đánh giá)
+TABLE ratings (
+  id SERIAL PRIMARY KEY,
+  ride_id INTEGER NOT NULL REFERENCES rides(ride_id),
+  user_id VARCHAR(255) NOT NULL REFERENCES users(clerk_id),
+  driver_id INTEGER NOT NULL REFERENCES drivers(id),
+  stars INTEGER NOT NULL CHECK (stars >= 1 AND stars <= 5),
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+- Mục đích: Lưu trữ đánh giá của khách hàng về tài xế
+- Quan hệ:
+  + ride_id -> rides.ride_id (1-1): Mỗi chuyến đi chỉ có 1 đánh giá
+  + user_id -> users.clerk_id (N-1)
+  + driver_id -> drivers.id (N-1)
+
+15.1.5. BẢNG PROMO_CODES (Mã giảm giá)
+TABLE promo_codes (
+  id SERIAL PRIMARY KEY,
+  code VARCHAR(50) UNIQUE NOT NULL,
+  description TEXT,
+  discount_type VARCHAR(20) NOT NULL,
+  discount_value DECIMAL(10,2) NOT NULL,
+  max_discount_amount DECIMAL(10,2),
+  min_order_amount DECIMAL(10,2),
+  usage_limit INTEGER,
+  used_count INTEGER DEFAULT 0,
+  start_date TIMESTAMP NOT NULL,
+  end_date TIMESTAMP NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+- Mục đích: Lưu trữ mã giảm giá
+- discount_type: percentage (phần trăm) hoặc fixed (số tiền cố định)
+
+15.2. API ENDPOINTS
+
+15.2.1. API XÁC THỰC (AUTHENTICATION)
+
+15.2.1.1. Đăng nhập Admin
+- Endpoint: /api/auth/login
+- Method: POST
+- Payload Json: { "email": "adminuber@gmail.com", "password": "..." }
+- Response Json: { "success": true, "data": { "accessToken": "...", "user": {...} } }
+- Ghi chú: Sử dụng cookie 'admin-token' để duy trì phiên.
+
+15.2.1.2. Đăng xuất
+- Endpoint: /api/auth/logout
+- Method: POST
+- Response Json: { "success": true, "message": "Logout successful" }
+
+15.2.1.3. Lấy thông tin phiên hiện tại
+- Endpoint: /api/auth/me
+- Method: GET
+- Response Json: { "success": true, "data": { "email": "...", "role": "admin", "name": "..." } }
+
+15.2.2. API QUẢN LÝ NGƯỜI DÙNG (USERS)
+
+15.2.2.1. Lấy danh sách người dùng
+- Endpoint: /api/admin/users
+- Method: GET
+- Query Parameters: { "page": 1, "limit": 10, "search": "...", "sortBy": "...", "sortOrder": "DESC" }
+- Response Json: { "success": true, "data": [...], "pagination": {...} }
+
+15.2.2.2. Lấy chi tiết người dùng
+- Endpoint: /api/admin/users/[id]
+- Method: GET
+- Response Json: { "success": true, "data": { "clerk_id": "...", "total_spent": 500000, ... } }
+
+15.2.2.3. Tạo người dùng mới
+- Endpoint: /api/admin/users
+- Method: POST
+- Payload Json: { "clerk_id": "...", "name": "...", "email": "..." }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.2.4. Cập nhật người dùng
+- Endpoint: /api/admin/users/[id]
+- Method: PATCH
+- Payload Json: { "name": "...", "email": "...", "phone": "..." }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.2.5. Xóa người dùng
+- Endpoint: /api/admin/users/[id]
+- Method: DELETE
+- Response Json: { "success": true, "message": "User deleted successfully" }
+
+15.2.3. API QUẢN LÝ TÀI XẾ (DRIVERS)
+
+15.2.3.1. Lấy danh sách tài xế
+- Endpoint: /api/admin/drivers
+- Method: GET
+- Query Parameters: { "page": 1, "limit": 10, "search": "...", "approval_status": "..." }
+- Response Json: { "success": true, "data": [...], "pagination": {...} }
+
+15.2.3.2. Lấy danh sách tài xế chờ duyệt
+- Endpoint: /api/admin/drivers/pending
+- Method: GET
+- Response Json: { "success": true, "data": [...], "pagination": {...} }
+
+15.2.3.3. Lấy chi tiết tài xế (kèm chuyến & đánh giá)
+- Endpoint: /api/admin/drivers/[id]
+- Method: GET
+- Response Json: { "success": true, "data": { "id": 1, "recentRides": [...], "recentRatings": [...] } }
+
+15.2.3.4. Tạo tài xế mới
+- Endpoint: /api/admin/drivers
+- Method: POST
+- Payload Json: { "first_name": "...", "email": "...", "license_plate": "..." }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.3.5. Cập nhật tài xế
+- Endpoint: /api/admin/drivers/[id]
+- Method: PATCH
+- Payload Json: { "status": "active", "car_seats": 7 }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.3.6. Phê duyệt tài xế
+- Endpoint: /api/admin/drivers/[id]/approve
+- Method: POST
+- Payload Json: { "approval_status": "approved", "rejection_reason": "..." }
+- Response Json: { "success": true, "message": "Đã duyệt tài xế thành công" }
+
+15.2.3.7. Xóa tài xế
+- Endpoint: /api/admin/drivers/[id]
+- Method: DELETE
+- Response Json: { "success": true, "message": "Driver deleted successfully" }
+
+15.2.4. API QUẢN LÝ CHUYẾN ĐI (RIDES)
+
+15.2.4.1. Lấy danh sách chuyến đi
+- Endpoint: /api/admin/rides
+- Method: GET
+- Query Parameters: { "page": 1, "status": "...", "search": "..." }
+- Response Json: { "success": true, "data": [...], "pagination": {...} }
+
+15.2.4.2. Lấy chi tiết chuyến đi
+- Endpoint: /api/admin/rides/[id]
+- Method: GET
+- Response Json: { "success": true, "data": { "ride_id": 1, "driver": {...}, "user": {...}, "rating": {...} } }
+
+15.2.4.3. Tạo chuyến đi mới (Manual)
+- Endpoint: /api/admin/rides
+- Method: POST
+- Payload Json: { "user_id": "...", "driver_id": 1, "fare_price": 50000 }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.4.4. Cập nhật chuyến đi
+- Endpoint: /api/admin/rides/[id]
+- Method: PATCH
+- Payload Json: { "ride_status": "...", "payment_status": "..." }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.4.5. Xóa chuyến đi
+- Endpoint: /api/admin/rides/[id]
+- Method: DELETE
+- Response Json: { "success": true, "message": "Ride deleted successfully" }
+
+15.2.5. API QUẢN LÝ MÃ GIẢM GIÁ (PROMO CODES)
+
+15.2.5.1. Lấy danh sách mã giảm giá
+- Endpoint: /api/admin/promo-codes
+- Method: GET
+- Response Json: { "success": true, "data": [...] }
+
+15.2.5.2. Lấy chi tiết mã giảm giá
+- Endpoint: /api/admin/promo-codes/[id]
+- Method: GET
+- Response Json: { "success": true, "data": {...} }
+
+15.2.5.3. Tạo mã giảm giá mới
+- Endpoint: /api/admin/promo-codes
+- Method: POST
+- Payload Json: { "code": "...", "discount_type": "...", "discount_value": 10 }
+- Response Json: { "success": true, "message": "Tạo mã giảm giá thành công" }
+
+15.2.5.4. Cập nhật mã giảm giá
+- Endpoint: /api/admin/promo-codes/[id]
+- Method: PUT
+- Payload Json: { "description": "...", "usage_limit": 100 }
+- Response Json: { "success": true, "message": "Cập nhật mã giảm giá thành công" }
+
+15.2.5.5. Xóa mã giảm giá
+- Endpoint: /api/admin/promo-codes/[id]
+- Method: DELETE
+- Response Json: { "success": true, "message": "Xóa mã giảm giá thành công" }
+
+15.2.6. API QUẢN LÝ ĐÁNH GIÁ (RATINGS)
+
+15.2.6.1. Lấy danh sách đánh giá
+- Endpoint: /api/admin/ratings
+- Method: GET
+- Query Parameters: { "page": 1, "driverId": 1, "minStars": 4 }
+- Response Json: { "success": true, "data": [...], "pagination": {...} }
+
+15.2.6.2. Tạo đánh giá (Admin/System)
+- Endpoint: /api/admin/ratings
+- Method: POST
+- Payload Json: { "ride_id": 1, "stars": 5, "comment": "..." }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.7. API QUẢN LÝ CẢNH BÁO (WARNINGS)
+
+15.2.7.1. Lấy danh sách cảnh báo tài xế
+- Endpoint: /api/admin/warnings
+- Method: GET
+- Query Parameters: { "page": 1, "driverId": 1, "resolved": "false" }
+- Response Json: { "success": true, "data": [...], "pagination": {...} }
+
+15.2.7.2. Tạo cảnh báo mới
+- Endpoint: /api/admin/warnings
+- Method: POST
+- Payload Json: { "driver_id": 1, "warning_type": "...", "severity": "...", "reason": "..." }
+- Response Json: { "success": true, "data": {...} }
+
+15.2.8. API THỐNG KÊ (STATS)
+
+15.2.8.1. Lấy thống kê Dashboard
+- Endpoint: /api/admin/stats
+- Method: GET
+- Query Parameters: { "period": "7d" }
+- Response Json: { "success": true, "data": { "overview": {...}, "dailyStats": [...], ... } }
+
+15.3. CÁC TRANG QUẢN TRỊ
+
+15.3.1. TRANG DASHBOARD (/admin)
+- Mục đích: Trang tổng quan hệ thống.
+- Các thành phần: StatCards, RevenueChart, TopDrivers, RecentActivity.
+- Tính năng: Lọc theo kỳ (7 ngày, 30 ngày,...), hiển thị biểu đồ tăng trưởng.
+
+15.3.2. TRANG QUẢN LÝ NGƯỜI DÙNG (/admin/users)
+- Mục đích: Danh sách khách hàng.
+- Tính năng: Tìm kiếm, phân trang, xem chi tiết, chỉnh sửa và xóa người dùng.
+
+15.3.3. TRANG QUẢN LÝ TÀI XẾ (/admin/drivers)
+- Mục đích: Quản lý đối tác tài xế.
+- Tính năng: Phê duyệt hồ sơ (approval_status), quản lý thông tin xe, xem hiệu suất (rating, earnings).
+
+15.3.4. TRANG QUẢN LÝ CHUYẾN ĐI (/admin/rides)
+- Mục đích: Theo dõi lịch sử và trạng thái chuyến đi.
+- Tính năng: Lọc theo trạng thái (hoàn thành, hủy,...), trạng thái thanh toán, xem thông tin tài xế/khách hàng.
+
+15.3.5. TRANG QUẢN LÝ MÃ GIẢM GIÁ (/admin/promo-codes)
+- Mục đích: Tạo và quản lý các chương trình khuyến mãi.
+- Tính năng: Thiết lập giới hạn sử dụng, thời hạn, loại giảm giá.
+
+15.3.6. TRANG ĐĂNG NHẬP (/admin/login)
+- Mục đích: Xác thực quyền truy cập Admin.
+
+15.4. CÔNG NGHỆ SỬ DỤNG & ỨNG DỤNG CHI TIẾT
+
+15.4.1. Next.js (App Router)
+- Ứng dụng: Framework tổng thể quản lý Frontend & Backend.
+- Chức năng cụ thể:
+  + App Router: Phân chia các trang quản trị (/admin, /admin/users,...).
+  + API Routes (Backend): Xây dựng hệ thống RESTful API trong thư mục /app/api.
+  + Layout & Templates: Duy trì giao diện Sidebar và Header nhất quán giữa các trang.
+  + Server vs Client Components: Tối ưu hóa việc render dữ liệu tĩnh trên Server và xử lý tương tác (Forms, Dialogs) trên Client.
+- Ví dụ trong Project:
+  + File `src/app/admin/layout.tsx` định nghĩa layout chung (Sidebar + Header) cho tất cả trang admin.
+  + Thư mục `src/app/api/admin/users/route.ts` chứa các API endpoint để quản lý người dùng (GET, POST, PATCH, DELETE).
+  + Khi bạn truy cập `/admin/drivers`, Next.js tự động load file `src/app/admin/drivers/page.tsx` và hiển thị trang quản lý tài xế.
+
+15.4.2. React 19
+- Ứng dụng: Xây dựng giao diện theo Component-based.
+- Chức năng cụ thể:
+  + Hooks: Sử dụng `useState`, `useEffect`, `useMemo` để xử lý logic nội bộ component.
+  + Reusable Components: Chia nhỏ UI thành các khối (Table, Card, Button) để dễ bảo trì.
+- Ví dụ trong Project:
+  + Component `StatCard` (src/components/Dashboard/StatCard.tsx) được tái sử dụng 4 lần trên Dashboard để hiển thị tổng số người dùng, tài xế, chuyến đi và doanh thu.
+  + Hook `useState` được dùng trong `DriverDetailsDialog` để quản lý trạng thái mở/đóng của dialog và dữ liệu form.
+  + Hook `useEffect` trong `RevenueChart` để đảm bảo biểu đồ chỉ render sau khi component đã mount (tránh lỗi SSR).
+
+15.4.3. Tailwind CSS
+- Ứng dụng: Thiết kế giao diện nhanh và responsive.
+- Chức năng cụ thể:
+  + Utility-First: Stylings linh hoạt ngay trong `className`.
+  + Responsive: Sử dụng các tiền tố `md:`, `lg:`, `sm:` để điều chỉnh layout cho máy tính, tablet và mobile.
+  + Custom Theme: Định nghĩa bảng màu xanh lá đặc trưng của hệ thống.
+- Ví dụ trong Project:
+  + Trong `StatCard`, class `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4` tạo layout 1 cột trên mobile, 2 cột trên tablet, 4 cột trên desktop.
+  + Class `bg-green-50 text-green-700` tạo màu nền và chữ xanh lá nhạt cho các thẻ thống kê.
+  + Button sử dụng class `px-4 py-2 rounded-lg hover:bg-green-600` để tạo padding, bo góc và hiệu ứng hover.
+
+15.4.4. TanStack Query (React Query)
+- Ứng dụng: Quản lý trạng thái Server-side.
+- Chức năng cụ thể:
+  + useQuery: Tự động fetching và caching danh sách người dùng, tài xế, chuyến đi.
+  + Mutation: Xử lý các thao tác POST, PATCH, DELETE (tạo, cập nhật, xóa) và tự động làm mới dữ liệu (Invalidate Queries) sau khi thành công.
+  + Loading States: Hiển thị Skeleton hoặc Spinner tự động trong quá trình đợi API.
+- Ví dụ trong Project:
+  + Hook `useAdminDrivers()` trong `src/hooks/useAdmin.ts` sử dụng `useQuery` với queryKey `["admin-drivers", params]` để fetch danh sách tài xế. Khi params thay đổi (ví dụ: chuyển trang), React Query tự động gọi lại API.
+  + Khi bạn xóa một tài xế bằng `useDeleteDriver()`, sau khi xóa thành công, hook tự động gọi `queryClient.invalidateQueries({ queryKey: ["admin-drivers"] })` để làm mới danh sách tài xế mà không cần reload trang.
+  + Trong component `DriversPage`, biến `isLoading` từ `useAdminDrivers()` được dùng để hiển thị Skeleton loading khi đang fetch dữ liệu.
+
+15.4.5. Zustand
+- Ứng dụng: Quản lý trạng thái Client-side nhẹ.
+- Chức năng cụ thể:
+  + Sidebar State: Điều khiển trạng thái đóng/mở của thanh menu qua tham số `isOpen` và hàm `toggle()`.
+  + Trạng thái Menu: Lưu trữ lựa chọn của người dùng trong phiên làm việc hiện tại.
+- Ví dụ trong Project:
+  + File `src/stores/useMenuSidebar.ts` định nghĩa store với state `isOpen` (boolean) và các hàm `toggle()`, `open()`, `close()`.
+  + Trong component `AppSidebar`, khi người dùng click vào nút menu, hàm `toggle()` được gọi để đảo trạng thái sidebar từ mở sang đóng hoặc ngược lại.
+  + State này được chia sẻ giữa `AppSidebar` và `DashboardHeader` mà không cần prop drilling hay Context phức tạp.
+
+15.4.6. PostgreSQL (Neon DB)
+- Ứng dụng: Hệ quản trị cơ sở dữ liệu.
+- Chức năng cụ thể:
+  + Complex Queries: Sử dụng JOIN, Subqueries (để đếm số chuyến đi), và Aggregate functions (`SUM`, `COUNT`, `AVG`).
+  + JSON Functions: Sử dụng `json_build_object` để trả về dữ liệu quan hệ phức tạp trong một lần query duy nhất.
+- Ví dụ trong Project:
+  + Trong API `GET /api/admin/drivers/[id]`, query sử dụng Subquery để đếm tổng số chuyến đi của tài xế:
+    ```sql
+    SELECT d.*, 
+      (SELECT COUNT(*) FROM rides WHERE driver_id = d.id) as total_rides
+    FROM drivers d WHERE id = $1
+    ```
+  + Trong API `GET /api/admin/rides/[id]`, sử dụng `json_build_object` để trả về thông tin tài xế và người dùng trong một object JSON lồng nhau:
+    ```sql
+    SELECT r.*, 
+      json_build_object('driver_id', d.id, 'first_name', d.first_name) as driver,
+      json_build_object('clerk_id', u.clerk_id, 'name', u.name) as user
+    FROM rides r
+    INNER JOIN drivers d ON r.driver_id = d.id
+    INNER JOIN users u ON r.user_id = u.clerk_id
+    ```
+  + Hàm `executeSql()` trong `src/lib/db.ts` sử dụng parameterized queries ($1, $2,...) để bảo vệ khỏi SQL Injection.
+
+15.5. CẤU TRÚC THƯ MỤC & GIẢI THÍCH CHI TIẾT
+
+src/
+├── app/                      # Next.js App Router (Pages & APIs)
+│   ├── admin/                # Giao diện Trang quản trị
+│   │   ├── drivers/          # Quản lý tài xế
+│   │   ├── login/            # Trang đăng nhập admin
+│   │   ├── promo-codes/      # Quản lý mã giảm giá
+│   │   ├── rides/            # Quản lý chuyến đi
+│   │   ├── users/            # Quản lý người dùng
+│   │   ├── layout.tsx        # Layout chung cho admin (Sidebar + Header)
+│   │   └── page.tsx          # Dashboard chính (Thống kê)
+│   ├── api/                  # Backend API Routes
+│   │   ├── admin/            # Các API phục vụ riêng cho Admin
+│   │   └── auth/             # API xử lý đăng nhập/đăng xuất
+│   ├── layout.tsx            # Root Layout của toàn bộ ứng dụng
+│   └── globals.css           # Cấu hình CSS toàn cục (Tailwind)
+│
+├── components/               # Các thành phần giao diện (UI Components)
+│   ├── ui/                   # Reusable components (shadcn/ui) như Button, Dialog, Table
+│   ├── Dashboard/            # Các thẻ stat, biểu đồ cho trang Dashboard
+│   ├── DriversPage/          # Bảng dữ liệu và Dialog quản lý tài xế
+│   ├── UserPage/             # Bảng dữ liệu khách hàng
+│   ├── RidesPage/            # Quản lý lịch sử chuyến đi
+│   ├── PromoCodePage/        # Card và Form quản lý mã giảm giá
+│   ├── layout/               # Thành phần cấu trúc như Sidebar (AppSidebar)
+│   └── Common/               # Header, SearchBar dùng chung
+│
+├── context/                  # Quản lý trạng thái toàn cục (React Context)
+│   └── useUserContext.tsx    # Lưu trữ thông tin đăng nhập và phiên làm việc
+│
+├── hooks/                    # Các Custom Hooks xử lý logic
+│   ├── useAdmin.ts           # Logic gọi API và xử lý dữ liệu admin
+│   └── useAuth.ts            # Logic xác thực người dùng
+│
+├── lib/                      # Các thư viện và cấu hình core
+│   ├── db.ts                 # Cấu hình kết nối và hàm executeSql (PostgreSQL)
+│   └── utils.ts              # Hàm tiện ích dùng chung (format tiền, ngày tháng)
+│
+├── stores/                   # Quản lý trạng thái nhẹ với Zustand
+│   └── useMenuSidebar.ts     # Trạng thái đóng/mở của sidebar
+│
+├── provider/                 # Các Provider bọc ngoài ứng dụng
+│   ├── ReactQueryClientProvider.tsx # Quản lý caching dữ liệu với TanStack Query
+│   └── ThemeProvider.tsx      # Hỗ trợ chuyển đổi Dark/Light mode
+│
+└── interface/ / types/       # Các định nghĩa kiểu (TypeScript) cho User, Driver, Ride
+

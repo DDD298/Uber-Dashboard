@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // Tắt để loại bỏ hydration warnings
   images: {
     remotePatterns: [
       {
