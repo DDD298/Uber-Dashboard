@@ -43,10 +43,10 @@ export const DriverCreateDialog = ({
     last_name: "",
     email: "",
     password: "",
-    license_plate: "",
-    vehicle_type: "",
-    vehicle_model: "",
-    vehicle_year: "",
+    phone: "",
+    license_number: "",
+    vehicle_type: "car",
+    car_seats: "4",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -84,11 +84,14 @@ export const DriverCreateDialog = ({
       newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
     }
 
-    if (formData.vehicle_year) {
-      const year = parseInt(formData.vehicle_year);
-      const currentYear = new Date().getFullYear();
-      if (isNaN(year) || year < 1900 || year > currentYear + 1) {
-        newErrors.vehicle_year = `Năm phải từ 1900 đến ${currentYear + 1}`;
+    if (formData.phone && !/^[\d\s\-+()]+$/.test(formData.phone)) {
+      newErrors.phone = "Số điện thoại không hợp lệ";
+    }
+
+    if (formData.car_seats) {
+      const seats = parseInt(formData.car_seats);
+      if (isNaN(seats) || seats < 1 || seats > 20) {
+        newErrors.car_seats = "Số chỗ ngồi không hợp lệ (1-20)";
       }
     }
 
@@ -105,11 +108,8 @@ export const DriverCreateDialog = ({
 
     const submitData = {
       ...formData,
-      vehicle_year: formData.vehicle_year
-        ? parseInt(formData.vehicle_year)
-        : undefined,
+      car_seats: parseInt(formData.car_seats),
     };
-
     createDriverMutation(submitData as any, {
       onSuccess: (_response: any) => {
         toast.success("Tạo tài xế thành công!");
@@ -128,10 +128,10 @@ export const DriverCreateDialog = ({
       last_name: "",
       email: "",
       password: "",
-      license_plate: "",
-      vehicle_type: "",
-      vehicle_model: "",
-      vehicle_year: "",
+      phone: "",
+      license_number: "",
+      vehicle_type: "car",
+      car_seats: "4",
     });
     setErrors({});
     onClose();
@@ -231,40 +231,61 @@ export const DriverCreateDialog = ({
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">
-                Email <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                placeholder="Nhập email"
-                className={`${
-                  errors.email ? "border-red-500" : "border-lightBorderV1"
-                } focus:border-mainTextHoverV1`}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
-              )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-700">
+                  Email <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  placeholder="Nhập email"
+                  className={`${
+                    errors.email ? "border-red-500" : "border-lightBorderV1"
+                  } focus:border-mainTextHoverV1`}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-gray-700">
+                  Số điện thoại
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleChange("phone", e.target.value)}
+                  placeholder="Nhập số điện thoại"
+                  className={`${
+                    errors.phone ? "border-red-500" : "border-lightBorderV1"
+                  } focus:border-mainTextHoverV1`}
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm">{errors.phone}</p>
+                )}
+              </div>
             </div>
 
             {/* Vehicle Info */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="license_plate" className="text-gray-700">
-                  Biển số xe
+                <Label htmlFor="license_number" className="text-gray-700">
+                  Số bằng lái / Biển số
                 </Label>
                 <Input
-                  id="license_plate"
-                  name="license_plate"
-                  value={formData.license_plate}
+                  id="license_number"
+                  name="license_number"
+                  value={formData.license_number}
                   onChange={(e) =>
-                    handleChange("license_plate", e.target.value)
+                    handleChange("license_number", e.target.value)
                   }
-                  placeholder="Nhập biển số xe"
+                  placeholder="Nhập số bằng lái hoặc biển số"
                   className="border-lightBorderV1 focus:border-mainTextHoverV1"
                 />
               </div>
@@ -281,10 +302,12 @@ export const DriverCreateDialog = ({
                     <SelectValue placeholder="Chọn loại xe" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sedan">Sedan</SelectItem>
+                    <SelectItem value="car">Car / Sedan</SelectItem>
                     <SelectItem value="suv">SUV</SelectItem>
                     <SelectItem value="van">Van</SelectItem>
-                    <SelectItem value="motorcycle">Xe máy</SelectItem>
+                    <SelectItem value="motorcycle">Motorcycle</SelectItem>
+                    <SelectItem value="truck">Truck</SelectItem>
+                    <SelectItem value="bus">Bus</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -292,42 +315,24 @@ export const DriverCreateDialog = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="vehicle_model" className="text-gray-700">
-                  Mẫu xe
+                <Label htmlFor="car_seats" className="text-gray-700">
+                  Số chỗ ngồi
                 </Label>
                 <Input
-                  id="vehicle_model"
-                  name="vehicle_model"
-                  value={formData.vehicle_model}
-                  onChange={(e) =>
-                    handleChange("vehicle_model", e.target.value)
-                  }
-                  placeholder="Nhập mẫu xe"
-                  className="border-lightBorderV1 focus:border-mainTextHoverV1"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="vehicle_year" className="text-gray-700">
-                  Năm sản xuất
-                </Label>
-                <Input
-                  id="vehicle_year"
-                  name="vehicle_year"
+                  id="car_seats"
+                  name="car_seats"
                   type="number"
-                  min="1900"
-                  max={new Date().getFullYear() + 1}
-                  value={formData.vehicle_year}
-                  onChange={(e) => handleChange("vehicle_year", e.target.value)}
-                  placeholder="Nhập năm sản xuất"
+                  min="1"
+                  max="20"
+                  value={formData.car_seats}
+                  onChange={(e) => handleChange("car_seats", e.target.value)}
+                  placeholder="Nhập số chỗ ngồi"
                   className={`${
-                    errors.vehicle_year
-                      ? "border-red-500"
-                      : "border-lightBorderV1"
+                    errors.car_seats ? "border-red-500" : "border-lightBorderV1"
                   } focus:border-mainTextHoverV1`}
                 />
-                {errors.vehicle_year && (
-                  <p className="text-red-500 text-sm">{errors.vehicle_year}</p>
+                {errors.car_seats && (
+                  <p className="text-red-500 text-sm">{errors.car_seats}</p>
                 )}
               </div>
             </div>

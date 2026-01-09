@@ -12,11 +12,10 @@ export async function POST(request: NextRequest) {
       last_name, 
       email, 
       password,
-      phone_number,
-      license_plate,
+      phone,
+      license_number,
       vehicle_type,
-      vehicle_model,
-      vehicle_year 
+      car_seats
     } = body;
 
     // Validate required fields
@@ -68,8 +67,8 @@ export async function POST(request: NextRequest) {
     // Create driver in database
     const result = await executeSql(
       `INSERT INTO drivers (
-        clerk_id, first_name, last_name, email,
-        license_plate, vehicle_type, vehicle_model, vehicle_year,
+        clerk_id, first_name, last_name, email, phone,
+        license_number, vehicle_type, car_seats,
         status, approval_status
       )
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'offline', 'pending')
@@ -79,10 +78,10 @@ export async function POST(request: NextRequest) {
         first_name,
         last_name,
         email,
-        license_plate || null,
+        phone || null,
+        license_number || null,
         vehicle_type || null,
-        vehicle_model || null,
-        vehicle_year || null
+        car_seats ? parseInt(car_seats.toString()) : 4
       ]
     );
 

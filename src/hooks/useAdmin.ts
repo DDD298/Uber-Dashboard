@@ -192,10 +192,10 @@ interface CreateDriverData {
   last_name: string;
   email: string;
   password: string;
-  license_plate?: string;
+  phone?: string;
+  license_number?: string;
   vehicle_type?: string;
-  vehicle_model?: string;
-  vehicle_year?: number;
+  car_seats: number;
 }
 
 interface UpdateDriverData {
