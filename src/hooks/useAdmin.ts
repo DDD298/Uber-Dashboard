@@ -34,6 +34,7 @@ interface UserResponse {
 interface CreateUserData {
   name: string;
   email: string;
+  password: string;
 }
 
 interface UpdateUserData {
