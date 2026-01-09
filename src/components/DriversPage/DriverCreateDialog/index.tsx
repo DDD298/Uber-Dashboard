@@ -13,7 +13,12 @@ import {
 } from "@/components/ui/select";
 import { useCreateDriver } from "@/hooks/useAdmin";
 import { toast } from "react-toastify";
-import { IconLoader2, IconPlus } from "@tabler/icons-react";
+import {
+  IconLoader2,
+  IconPlus,
+  IconEye,
+  IconEyeOff,
+} from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import {
   Dialog,
@@ -34,17 +39,17 @@ export const DriverCreateDialog = ({
   onSuccess,
 }: DriverCreateDialogProps) => {
   const [formData, setFormData] = useState({
-    clerk_id: "",
     first_name: "",
     last_name: "",
     email: "",
-    phone_number: "",
+    password: "",
     license_plate: "",
     vehicle_type: "",
     vehicle_model: "",
     vehicle_year: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const { mutate: createDriverMutation, isPending } = useCreateDriver();
 
@@ -58,10 +63,6 @@ export const DriverCreateDialog = ({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
-    if (!formData.clerk_id.trim()) {
-      newErrors.clerk_id = "Clerk ID là bắt buộc";
-    }
 
     if (!formData.first_name.trim()) {
       newErrors.first_name = "Tên là bắt buộc";
@@ -77,11 +78,10 @@ export const DriverCreateDialog = ({
       newErrors.email = "Email không hợp lệ";
     }
 
-    if (
-      formData.phone_number &&
-      !/^[\d\s\-+()]+$/.test(formData.phone_number)
-    ) {
-      newErrors.phone_number = "Số điện thoại không hợp lệ";
+    if (!formData.password.trim()) {
+      newErrors.password = "Mật khẩu là bắt buộc";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
     }
 
     if (formData.vehicle_year) {
@@ -124,11 +124,10 @@ export const DriverCreateDialog = ({
 
   const handleClose = () => {
     setFormData({
-      clerk_id: "",
       first_name: "",
       last_name: "",
       email: "",
-      phone_number: "",
+      password: "",
       license_plate: "",
       vehicle_type: "",
       vehicle_model: "",
@@ -136,14 +135,6 @@ export const DriverCreateDialog = ({
     });
     setErrors({});
     onClose();
-  };
-
-  const generateClerkId = () => {
-    const prefix = "driver_";
-    const randomString =
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15);
-    setFormData((prev) => ({ ...prev, clerk_id: prefix + randomString }));
   };
 
   return (
@@ -162,34 +153,37 @@ export const DriverCreateDialog = ({
           transition={{ duration: 0.3 }}
         >
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Clerk ID */}
+            {/* Password Field */}
             <div className="space-y-2">
-              <Label htmlFor="clerk_id" className="text-gray-700">
-                Clerk ID <span className="text-red-500">*</span>
+              <Label htmlFor="password" className="text-gray-700">
+                Mật khẩu <span className="text-red-500">*</span>
               </Label>
-              <div className="flex items-center gap-2">
+              <div className="relative">
                 <Input
-                  id="clerk_id"
-                  name="clerk_id"
-                  value={formData.clerk_id}
-                  onChange={(e) => handleChange("clerk_id", e.target.value)}
-                  placeholder="Nhập clerk ID hoặc tạo tự động"
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => handleChange("password", e.target.value)}
+                  placeholder="Tối thiểu 8 ký tự"
                   className={`${
-                    errors.clerk_id ? "border-red-500" : "border-lightBorderV1"
-                  } focus:border-mainTextHoverV1`}
+                    errors.password ? "border-red-500" : "border-lightBorderV1"
+                  } focus:border-mainTextHoverV1 pr-10`}
                 />
-                <Button
+                <button
                   type="button"
-                  variant="outline"
-                  size="lg"
-                  onClick={generateClerkId}
-                  className="whitespace-nowrap"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
                 >
-                  Tạo ID
-                </Button>
+                  {showPassword ? (
+                    <IconEyeOff className="h-4 w-4" />
+                  ) : (
+                    <IconEye className="h-4 w-4" />
+                  )}
+                </button>
               </div>
-              {errors.clerk_id && (
-                <p className="text-red-500 text-sm">{errors.clerk_id}</p>
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
               )}
             </div>
 
@@ -237,47 +231,24 @@ export const DriverCreateDialog = ({
             </div>
 
             {/* Contact Info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700">
-                  Email <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  placeholder="Nhập email"
-                  className={`${
-                    errors.email ? "border-red-500" : "border-lightBorderV1"
-                  } focus:border-mainTextHoverV1`}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone_number" className="text-gray-700">
-                  Số điện thoại
-                </Label>
-                <Input
-                  id="phone_number"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={(e) => handleChange("phone_number", e.target.value)}
-                  placeholder="Nhập số điện thoại"
-                  className={`${
-                    errors.phone_number
-                      ? "border-red-500"
-                      : "border-lightBorderV1"
-                  } focus:border-mainTextHoverV1`}
-                />
-                {errors.phone_number && (
-                  <p className="text-red-500 text-sm">{errors.phone_number}</p>
-                )}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-gray-700">
+                Email <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                placeholder="Nhập email"
+                className={`${
+                  errors.email ? "border-red-500" : "border-lightBorderV1"
+                } focus:border-mainTextHoverV1`}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
             </div>
 
             {/* Vehicle Info */}

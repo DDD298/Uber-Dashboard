@@ -6,7 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateUser } from "@/hooks/useAdmin";
 import { toast } from "react-toastify";
-import { IconLoader2, IconPlus } from "@tabler/icons-react";
+import {
+  IconLoader2,
+  IconPlus,
+  IconEye,
+  IconEyeOff,
+} from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import {
   Dialog,
@@ -32,6 +37,7 @@ export const UserCreateDialog = ({
     password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const { mutate: createUserMutation, isPending } = useCreateUser();
 
@@ -157,17 +163,30 @@ export const UserCreateDialog = ({
               <Label htmlFor="password" className="text-gray-700">
                 Mật khẩu <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Tối thiểu 8 ký tự"
-                className={`${
-                  errors.password ? "border-red-500" : "border-lightBorderV1"
-                } focus:border-mainTextHoverV1`}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Tối thiểu 8 ký tự"
+                  className={`${
+                    errors.password ? "border-red-500" : "border-lightBorderV1"
+                  } focus:border-mainTextHoverV1 pr-10`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showPassword ? (
+                    <IconEyeOff className="h-4 w-4" />
+                  ) : (
+                    <IconEye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-sm">{errors.password}</p>
               )}

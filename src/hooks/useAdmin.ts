@@ -40,7 +40,6 @@ interface CreateUserData {
 interface UpdateUserData {
   name?: string;
   email?: string;
-  phone?: string;
 }
 
 interface UsersQueryParams {
@@ -189,11 +188,10 @@ interface DriverResponse {
 }
 
 interface CreateDriverData {
-  clerk_id: string;
   first_name: string;
   last_name: string;
   email: string;
-  phone_number?: string;
+  password: string;
   license_plate?: string;
   vehicle_type?: string;
   vehicle_model?: string;
@@ -256,7 +254,7 @@ export const useCreateDriver = () => {
 
   return useMutation({
     mutationFn: async (data: CreateDriverData) => {
-      const response = await fetch("/api/admin/drivers", {
+      const response = await fetch("/api/admin/drivers/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
