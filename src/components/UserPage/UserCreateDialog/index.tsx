@@ -59,11 +59,9 @@ export const UserCreateDialog = ({
 
     if (formData.phone && formData.phone.trim()) {
       const phone = formData.phone.trim();
-      if (!phone.startsWith("+")) {
-        newErrors.phone = "Phone number must start with + (e.g., +84123456789)";
-      } else if (!/^\+[1-9]\d{1,14}$/.test(phone)) {
-        newErrors.phone =
-          "Phone number must be in E.164 format (e.g., +84123456789)";
+      // Basic validation - allow any format since it's only stored in our database
+      if (!/^[\d\s\-+()]+$/.test(phone)) {
+        newErrors.phone = "Phone number contains invalid characters";
       }
     }
 
@@ -166,7 +164,7 @@ export const UserCreateDialog = ({
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="+84123456789 (optional)"
+                placeholder="0915678901 hoặc +84915678901"
                 className={`${
                   errors.phone ? "border-red-500" : "border-lightBorderV1"
                 } focus:border-mainTextHoverV1`}

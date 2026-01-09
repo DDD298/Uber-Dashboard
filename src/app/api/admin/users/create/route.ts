@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
         email_address: [email],
         first_name: name.split(" ")[0] || name,
         last_name: name.split(" ").slice(1).join(" ") || "",
-        ...(phone && phone.trim().startsWith("+") ? { phone_number: [phone.trim()] } : {}),
+        // Note: phone_number not included - Vietnam (+84) not supported by Clerk
+        // Phone will be stored only in our database
       }),
     });
 
