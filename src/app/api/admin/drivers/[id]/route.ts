@@ -18,9 +18,7 @@ export async function GET(
         (SELECT COUNT(*) FROM rides WHERE driver_id = d.id) as total_rides,
         (SELECT COUNT(*) FROM rides WHERE driver_id = d.id AND ride_status = 'completed') as completed_rides,
         (SELECT COUNT(*) FROM rides WHERE driver_id = d.id AND ride_status = 'cancelled') as cancelled_rides,
-        (SELECT SUM(fare_price) FROM rides WHERE driver_id = d.id AND payment_status = 'paid') as total_earnings,
-        (SELECT COUNT(*) FROM driver_warnings WHERE driver_id = d.id) as total_warnings,
-        (SELECT COUNT(*) FROM driver_warnings WHERE driver_id = d.id AND resolved_at IS NULL) as active_warnings
+        (SELECT SUM(fare_price) FROM rides WHERE driver_id = d.id AND payment_status = 'paid') as total_earnings
       FROM drivers d
       WHERE id = $1`,
       [driverId]
