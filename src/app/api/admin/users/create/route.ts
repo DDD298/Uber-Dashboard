@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const clerkResponse = await fetch("https://api.clerk.com/v1/users", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+        Authorization: `Bearer sk_test_TMhRDHV6muU3x1KuKt1xuGCHHHUuR3P84dY9PpzDVH`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
