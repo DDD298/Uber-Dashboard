@@ -216,6 +216,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className="group peer hidden text-sidebar-foreground md:block"
+        suppressHydrationWarning
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
@@ -242,6 +243,7 @@ const Sidebar = React.forwardRef<
               : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
             className
           )}
+          suppressHydrationWarning
           {...props}
         >
           <div
@@ -306,6 +308,7 @@ const SidebarRail = React.forwardRef<
         "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
         className
       )}
+      suppressHydrationWarning
       {...props}
     />
   );
@@ -581,6 +584,7 @@ const SidebarMenuButton = React.forwardRef<
           side="right"
           align="center"
           hidden={state !== "collapsed" || isMobile}
+          suppressHydrationWarning
           {...tooltip}
         />
       </Tooltip>
@@ -646,10 +650,7 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean;
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  // Random width between 50 to 90%.
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  }, []);
+  const width = "70%";
 
   return (
     <div

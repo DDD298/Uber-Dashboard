@@ -37,7 +37,7 @@ export default function CommonHeader() {
             <HamburgerMenu size="20" color="#fff" />
           </button>
         </div>
-        <div className="relative hidden md:block">
+        <div className="relative hidden md:block" suppressHydrationWarning>
           <form
             onSubmit={handleSearchSubmit}
             className="relative flex items-center gap-4"

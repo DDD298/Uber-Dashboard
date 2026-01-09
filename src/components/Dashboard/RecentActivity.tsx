@@ -21,8 +21,10 @@ interface RecentRide {
 export default function RecentActivity() {
   const [recentRides, setRecentRides] = useState<RecentRide[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     fetchRecentRides();
   }, []);
 
@@ -43,6 +45,13 @@ export default function RecentActivity() {
   };
 
   const getStatusBadge = (status: string) => {
+    if (!status) {
+      return (
+        <Badge className="bg-gray-100 border-gray-400 text-gray-700 hover:bg-gray-200 border text-sm font-medium uppercase">
+          Unknown
+        </Badge>
+      );
+    }
     switch (status.toLowerCase()) {
       case "completed":
         return <Badge variant="success">Completed</Badge>;
@@ -139,7 +148,9 @@ export default function RecentActivity() {
                     <div className="flex items-center gap-1 text-sm text-gray-700">
                       <Clock size={12} />
                       <span>
-                        {formatTimestamp(new Date(ride.created_at).getTime())}
+                        {isMounted
+                          ? formatTimestamp(new Date(ride.created_at).getTime())
+                          : "..."}
                       </span>
                     </div>
                     <div className="flex items-center gap-1 text-sm text-gray-700">

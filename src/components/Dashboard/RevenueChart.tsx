@@ -1,4 +1,5 @@
 "use client";
+import React, { useState, useEffect } from "react";
 
 import { Card } from "@/components/ui/card";
 import { Line } from "react-chartjs-2";
@@ -37,6 +38,12 @@ interface RevenueChartProps {
 }
 
 export default function RevenueChart({ data, period }: RevenueChartProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN", { month: "short", day: "numeric" });
@@ -225,6 +232,16 @@ export default function RevenueChart({ data, period }: RevenueChartProps) {
 
   const revenueGrowth = 12;
   const ridesGrowth = 5;
+
+  if (!isMounted) {
+    return (
+      <Card>
+        <div className="h-[450px] bg-gray-50 animate-pulse rounded-lg flex items-center justify-center">
+          <p className="text-gray-400">Đang tải biểu đồ...</p>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card>

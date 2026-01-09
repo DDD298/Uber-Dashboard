@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/useUserContext";
 
@@ -17,7 +18,15 @@ export default function DashboardHeader({
   username: propUsername,
 }: DashboardHeaderProps) {
   const { profile } = useUser();
-  const username = propUsername || profile?.data?.user?.name || "User";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const username = mounted
+    ? propUsername || profile?.data?.user?.name || "User"
+    : "User";
 
   return (
     <motion.div
