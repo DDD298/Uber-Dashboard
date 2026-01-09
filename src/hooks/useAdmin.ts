@@ -32,7 +32,6 @@ interface UserResponse {
 }
 
 interface CreateUserData {
-  clerk_id: string;
   name: string;
   email: string;
   phone?: string;
@@ -98,7 +97,7 @@ export const useCreateUser = () => {
 
   return useMutation({
     mutationFn: async (data: CreateUserData) => {
-      const response = await fetch("/api/admin/users", {
+      const response = await fetch("/api/admin/users/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

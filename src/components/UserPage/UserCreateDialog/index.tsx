@@ -27,7 +27,6 @@ export const UserCreateDialog = ({
   onSuccess,
 }: UserCreateDialogProps) => {
   const [formData, setFormData] = useState({
-    clerk_id: "",
     name: "",
     email: "",
     phone: "",
@@ -47,10 +46,6 @@ export const UserCreateDialog = ({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
-    if (!formData.clerk_id.trim()) {
-      newErrors.clerk_id = "Clerk ID is required";
-    }
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
@@ -79,7 +74,7 @@ export const UserCreateDialog = ({
 
     createUserMutation(formData, {
       onSuccess: (_response: any) => {
-        toast.success("User created successfully!");
+        toast.success("User created successfully in Clerk and database!");
         handleClose();
         onSuccess?.();
       },
@@ -91,7 +86,6 @@ export const UserCreateDialog = ({
 
   const handleClose = () => {
     setFormData({
-      clerk_id: "",
       name: "",
       email: "",
       phone: "",
@@ -100,22 +94,16 @@ export const UserCreateDialog = ({
     onClose();
   };
 
-  const generateClerkId = () => {
-    const prefix = "user_";
-    const randomString =
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15);
-    setFormData((prev) => ({ ...prev, clerk_id: prefix + randomString }));
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         size="medium"
-        className="max-h-[90vh] overflow-y-auto bg-white"
+        className="max-h-[90vh] overflow-y-auto bg-[#EFF0F7]"
       >
         <DialogHeader>
-          <DialogTitle className="text-gray-700">Add New User</DialogTitle>
+          <DialogTitle className="text-gray-700">
+            Thêm người dùng mới
+          </DialogTitle>
         </DialogHeader>
 
         <motion.div
@@ -125,38 +113,8 @@ export const UserCreateDialog = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="clerk_id" className="text-gray-700">
-                Clerk ID <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="clerk_id"
-                  name="clerk_id"
-                  value={formData.clerk_id}
-                  onChange={handleChange}
-                  placeholder="Enter clerk ID or generate one"
-                  className={`${
-                    errors.clerk_id ? "border-red-500" : "border-lightBorderV1"
-                  } focus:border-mainTextHoverV1`}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  onClick={generateClerkId}
-                  className="whitespace-nowrap"
-                >
-                  Generate ID
-                </Button>
-              </div>
-              {errors.clerk_id && (
-                <p className="text-red-500 text-sm">{errors.clerk_id}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="name" className="text-gray-700">
-                Name <span className="text-red-500">*</span>
+                Tên <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="name"
@@ -195,7 +153,7 @@ export const UserCreateDialog = ({
 
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-gray-700">
-                Phone Number
+                Số điện thoại
               </Label>
               <Input
                 id="phone"
@@ -219,18 +177,18 @@ export const UserCreateDialog = ({
                 onClick={handleClose}
                 disabled={isPending}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending ? (
                   <>
                     <IconLoader2 className="h-4 w-4 animate-spin" />
-                    Creating...
+                    Đang tạo...
                   </>
                 ) : (
                   <>
                     <IconPlus className="h-4 w-4" />
-                    Create User
+                    Tạo người dùng
                   </>
                 )}
               </Button>
