@@ -71,7 +71,7 @@ export const UserCreateDialog = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-m ,
+
     if (!validateForm()) {
       return;
     }
