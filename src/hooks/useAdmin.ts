@@ -34,7 +34,6 @@ interface UserResponse {
 interface CreateUserData {
   name: string;
   email: string;
-  phone?: string;
 }
 
 interface UpdateUserData {

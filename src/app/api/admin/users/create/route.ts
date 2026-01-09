@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone } = body;
+    const { name, email } = body;
 
     // Validate required fields
     if (!name || !email) {
@@ -54,12 +54,12 @@ export async function POST(request: NextRequest) {
     const clerkUser = await clerkResponse.json();
     const clerk_id = clerkUser.id;
 
-    // Create user in database
+    // Create user in database (without phone - column doesn't exist)
     const result = await executeSql(
-      `INSERT INTO users (clerk_id, name, email, phone, created_at)
-       VALUES ($1, $2, $3, $4, NOW())
+      `INSERT INTO users (clerk_id, name, email, created_at)
+       VALUES ($1, $2, $3, NOW())
        RETURNING *`,
-      [clerk_id, name, email, phone || null]
+      [clerk_id, name, email]
     );
 
     return NextResponse.json(

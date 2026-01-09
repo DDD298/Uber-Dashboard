@@ -29,7 +29,6 @@ export const UserCreateDialog = ({
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -55,14 +54,6 @@ export const UserCreateDialog = ({
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Email is not valid";
-    }
-
-    if (formData.phone && formData.phone.trim()) {
-      const phone = formData.phone.trim();
-      // Basic validation - allow any format since it's only stored in our database
-      if (!/^[\d\s\-+()]+$/.test(phone)) {
-        newErrors.phone = "Phone number contains invalid characters";
-      }
     }
 
     setErrors(newErrors);
@@ -92,7 +83,6 @@ export const UserCreateDialog = ({
     setFormData({
       name: "",
       email: "",
-      phone: "",
     });
     setErrors({});
     onClose();
@@ -152,25 +142,6 @@ export const UserCreateDialog = ({
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phone" className="text-gray-700">
-                Số điện thoại
-              </Label>
-              <Input
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="0915678901 hoặc +84915678901"
-                className={`${
-                  errors.phone ? "border-red-500" : "border-lightBorderV1"
-                } focus:border-mainTextHoverV1`}
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone}</p>
               )}
             </div>
 
