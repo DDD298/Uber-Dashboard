@@ -35,9 +35,7 @@ export async function GET(request: NextRequest) {
     // Get users
     const usersQuery = `
       SELECT 
-        clerk_id,
-        name,
-        email,
+        *,
         (SELECT COUNT(*) FROM rides WHERE user_id = users.clerk_id) as total_rides,
         (SELECT COUNT(*) FROM rides WHERE user_id = users.clerk_id AND ride_status = 'completed') as completed_rides
       FROM users

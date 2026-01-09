@@ -133,23 +133,26 @@ export function formatTimestamp(timestamp: number): string {
 /**
  * Get Badge variant based on status
  */
-export function getStatusVariant(status: string): "default" | "secondary" | "destructive" | "outline" | "green" | "red" | "blue" | "yellow" | "stone" | "zinc" | "neutral" | "slate" {
+export function getStatusVariant(status: string): "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" | "danger" {
   const s = status?.toUpperCase();
   const variants: Record<string, any> = {
     PENDING: "secondary",
-    ACCEPTED: "default",
-    PICKED_UP: "default",
+    ACCEPTED: "info",
+    PICKED_UP: "info",
     DELIVERED: "outline",
-    COMPLETED: "green",
-    CANCELLED: "destructive",
+    COMPLETED: "success",
+    CANCELLED: "danger",
     OPEN: "secondary",
-    IN_PROGRESS: "default",
+    IN_PROGRESS: "info",
     RESOLVED: "outline",
-    APPROVED: "green",
-    LOCKED: "destructive",
-    ONLINE: "green",
-    OFFLINE: "stone",
-    BUSY: "yellow",
+    APPROVED: "success",
+    LOCKED: "danger",
+    ONLINE: "success",
+    OFFLINE: "secondary",
+    BUSY: "warning",
+    PAID: "success",
+    FAILED: "danger",
+    REFUNDED: "info",
   };
   return variants[s] || "default";
 }

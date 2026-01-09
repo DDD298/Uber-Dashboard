@@ -10,7 +10,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { IconTrash, IconMenu3, IconMapPin } from "@tabler/icons-react";
+import {
+  IconTrash,
+  IconMenu3,
+  IconMapPin,
+  IconStar,
+  IconArrowRight,
+} from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { formatCurrency, formatDate, getStatusVariant } from "@/lib/utils";
@@ -18,26 +24,32 @@ import { formatCurrency, formatDate, getStatusVariant } from "@/lib/utils";
 interface Ride {
   id: number;
   ride_id: string;
-  user?: {
+  passenger?: {
     clerk_id: string;
     name: string;
     email: string;
   };
   driver?: {
-    clerk_id: string;
+    driver_id: number;
     first_name: string;
     last_name: string;
-    email: string;
-    vehicle_type?: string;
-    license_plate?: string;
+    profile_image_url?: string;
+    car_image_url?: string;
+    car_seats?: number;
+    rating?: number;
   };
   origin_address: string;
   destination_address: string;
   ride_time: number;
-  fare_price: number;
-  final_price: number;
-  payment_status: "pending" | "completed" | "failed" | "refunded";
-  status: "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
+  fare_price: number | string;
+  final_price?: number | string;
+  payment_status: "pending" | "paid" | "failed" | "refunded";
+  ride_status:
+    | "pending"
+    | "accepted"
+    | "in_progress"
+    | "completed"
+    | "cancelled";
   created_at: string;
 }
 
@@ -87,7 +99,11 @@ export default function RideTable({
       refunded: "Đã hoàn tiền",
       cancelled: "Đã hủy",
     };
-    return <Badge variant={variant as any}>{labels[status] || status}</Badge>;
+    return (
+      <Badge variant={variant as any} className="w-[120px] justify-center">
+        {labels[status] || status}
+      </Badge>
+    );
   };
 
   if (isLoading) {
@@ -152,6 +168,15 @@ export default function RideTable({
               rides.map((ride, index) => {
                 const rowNumber = (currentPage - 1) * 10 + index + 1;
                 const rideId = ride.id?.toString() || ride.ride_id || "";
+                const farePrice =
+                  typeof ride.fare_price === "string"
+                    ? parseFloat(ride.fare_price)
+                    : ride.fare_price;
+                const finalPrice = ride.final_price
+                  ? typeof ride.final_price === "string"
+                    ? parseFloat(ride.final_price)
+                    : ride.final_price
+                  : farePrice;
 
                 return (
                   <TableRow
@@ -172,10 +197,10 @@ export default function RideTable({
                     <TableCell>
                       <div>
                         <p className="font-semibold text-gray-700">
-                          {ride.user?.name || "N/A"}
+                          {ride.passenger?.name || "N/A"}
                         </p>
                         <p className="text-sm text-gray-700">
-                          {ride.user?.email}
+                          {ride.passenger?.email}
                         </p>
                       </div>
                     </TableCell>
@@ -186,38 +211,43 @@ export default function RideTable({
                             ? `${ride.driver.first_name} ${ride.driver.last_name}`
                             : "Chưa có"}
                         </p>
-                        {ride.driver?.vehicle_type && (
-                          <p className="text-sm text-gray-700">
-                            {ride.driver.vehicle_type} -{" "}
-                            {ride.driver.license_plate}
-                          </p>
+                        {ride.driver?.rating && (
+                          <div className="flex items-center gap-1 text-sm text-gray-700">
+                            <IconStar className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                            <span>{ride.driver.rating.toFixed(1)}</span>
+                          </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="min-w-[260px] max-w-[260px] w-[260px]">
-                      <div className="flex items-start gap-1">
-                        <IconMapPin className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm">
-                          <p className="text-gray-700">{ride.origin_address}</p>
-                          <p className="text-gray-700">
-                            → {ride.destination_address}
+                    <TableCell className="min-w-[280px] max-w-[350px]">
+                      <div className="flex items-start gap-2">
+                        <IconMapPin className="h-4 w-4 text-green-600 flex-shrink-0 mt-1" />
+                        <div className="text-sm whitespace-normal break-words space-y-1">
+                          <p className="text-gray-700 font-medium leading-tight">
+                            {ride.origin_address}
                           </p>
+                          <div className="flex items-center gap-1.5 text-gray-500">
+                            <IconArrowRight className="h-3 w-3 flex-shrink-0" />
+                            <p className="leading-tight">
+                              {ride.destination_address}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div>
                         <p className="font-medium text-green-700">
-                          {formatCurrency(ride.final_price)}
+                          {formatCurrency(finalPrice)}
                         </p>
-                        {ride.final_price !== ride.fare_price && (
+                        {finalPrice !== farePrice && (
                           <p className="text-sm text-gray-700 line-through">
-                            {formatCurrency(ride.fare_price)}
+                            {formatCurrency(farePrice)}
                           </p>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>{getStatusBadge(ride.status)}</TableCell>
+                    <TableCell>{getStatusBadge(ride.ride_status)}</TableCell>
                     <TableCell>
                       {getPaymentStatusBadge(ride.payment_status)}
                     </TableCell>
@@ -228,19 +258,6 @@ export default function RideTable({
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => onView(rideId)}
-                            className="text-gray-700 hover:text-mainTextHoverV1 hover:bg-transparent"
-                          >
-                            <IconMenu3 className="h-4 w-4" />
-                          </Button>
-                        </motion.div>
                         <motion.div
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}

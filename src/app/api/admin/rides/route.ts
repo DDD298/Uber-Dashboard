@@ -71,24 +71,10 @@ export async function GET(request: NextRequest) {
     );
     const total = parseInt(countResult[0].total);
 
-    // Get rides with driver info
+    // Get rides with driver and passenger info
     const rides = await executeSql(
       `SELECT
-        r.ride_id,
-        r.origin_address,
-        r.destination_address,
-        r.origin_latitude,
-        r.origin_longitude,
-        r.destination_latitude,
-        r.destination_longitude,
-        r.ride_time,
-        r.fare_price,
-        r.payment_status,
-        r.payment_intent_id,
-        r.user_id,
-        r.created_at,
-        r.cancelled_at,
-        r.cancel_reason,
+        r.*,
         json_build_object(
           'driver_id', d.id,
           'first_name', d.first_name,
@@ -97,9 +83,15 @@ export async function GET(request: NextRequest) {
           'car_image_url', d.car_image_url,
           'car_seats', d.car_seats,
           'rating', d.rating
-        ) AS driver
+        ) AS driver,
+        json_build_object(
+          'clerk_id', u.clerk_id,
+          'name', u.name,
+          'email', u.email
+        ) AS passenger
       FROM rides r
-      JOIN drivers d ON r.driver_id = d.id
+      LEFT JOIN drivers d ON r.driver_id = d.id
+      LEFT JOIN users u ON r.user_id = u.clerk_id
       ${whereClause}
       ORDER BY r.created_at DESC
       LIMIT $${paramIndex}
