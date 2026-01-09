@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         email_address: [email],
         first_name: name.split(" ")[0] || name,
         last_name: name.split(" ").slice(1).join(" ") || "",
-        phone_number: phone ? [phone] : undefined,
+        ...(phone && phone.trim().startsWith("+") ? { phone_number: [phone.trim()] } : {}),
       }),
     });
 

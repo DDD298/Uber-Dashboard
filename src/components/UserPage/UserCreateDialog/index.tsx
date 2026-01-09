@@ -57,8 +57,14 @@ export const UserCreateDialog = ({
       newErrors.email = "Email is not valid";
     }
 
-    if (formData.phone && !/^[\d\s\-+()]+$/.test(formData.phone)) {
-      newErrors.phone = "Phone number is not valid";
+    if (formData.phone && formData.phone.trim()) {
+      const phone = formData.phone.trim();
+      if (!phone.startsWith("+")) {
+        newErrors.phone = "Phone number must start with + (e.g., +84123456789)";
+      } else if (!/^\+[1-9]\d{1,14}$/.test(phone)) {
+        newErrors.phone =
+          "Phone number must be in E.164 format (e.g., +84123456789)";
+      }
     }
 
     setErrors(newErrors);
@@ -98,7 +104,7 @@ export const UserCreateDialog = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         size="medium"
-        className="max-h-[90vh] overflow-y-auto bg-[#EFF0F7]"
+        className="max-h-[90vh] overflow-y-auto bg-white max-w-2xl"
       >
         <DialogHeader>
           <DialogTitle className="text-gray-700">
@@ -160,7 +166,7 @@ export const UserCreateDialog = ({
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="Enter phone number"
+                placeholder="+84123456789 (optional)"
                 className={`${
                   errors.phone ? "border-red-500" : "border-lightBorderV1"
                 } focus:border-mainTextHoverV1`}
