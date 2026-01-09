@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10");
     const search = searchParams.get("search") || "";
     const minRating = parseFloat(searchParams.get("minRating") || "0");
+    const approvalStatus = searchParams.get("approval_status") || "";
     const sortBy = searchParams.get("sortBy") || "id";
     const sortOrder = searchParams.get("sortOrder") || "DESC";
 
@@ -25,13 +26,18 @@ export async function GET(request: NextRequest) {
     let paramIndex = 1;
 
     if (search) {
-      conditions.push(`(first_name ILIKE $${paramIndex} OR last_name ILIKE $${paramIndex})`);
+      conditions.push(`(first_name ILIKE $${paramIndex} OR last_name ILIKE $${paramIndex} OR email ILIKE $${paramIndex} OR phone ILIKE $${paramIndex})`);
       values.push(`%${search}%`);
       paramIndex++;
     }
     if (minRating > 0) {
       conditions.push(`average_rating >= $${paramIndex}`);
       values.push(minRating);
+      paramIndex++;
+    }
+    if (approvalStatus) {
+      conditions.push(`approval_status = $${paramIndex}`);
+      values.push(approvalStatus);
       paramIndex++;
     }
 
