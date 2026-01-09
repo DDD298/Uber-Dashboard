@@ -30,6 +30,7 @@ export const UserCreateDialog = ({
     name: "",
     email: "",
     phone: "",
+    password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -55,6 +56,12 @@ export const UserCreateDialog = ({
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Email is not valid";
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     if (formData.phone && formData.phone.trim()) {
@@ -93,6 +100,7 @@ export const UserCreateDialog = ({
       name: "",
       email: "",
       phone: "",
+      password: "",
     });
     setErrors({});
     onClose();
@@ -152,6 +160,26 @@ export const UserCreateDialog = ({
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-gray-700">
+                Mật khẩu <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Tối thiểu 8 ký tự"
+                className={`${
+                  errors.password ? "border-red-500" : "border-lightBorderV1"
+                } focus:border-mainTextHoverV1`}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
               )}
             </div>
 

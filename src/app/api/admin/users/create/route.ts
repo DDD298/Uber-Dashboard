@@ -7,12 +7,12 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone } = body;
+    const { name, email, phone, password } = body;
 
     // Validate required fields
-    if (!name || !email) {
+    if (!name || !email || !password) {
       return NextResponse.json(
-        { success: false, error: "Name and email are required" },
+        { success: false, error: "Name, email, and password are required" },
         { status: 400 }
       );
     }
@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         email_address: [email],
+        password: password,
         first_name: name.split(" ")[0] || name,
         last_name: name.split(" ").slice(1).join(" ") || "",
         // Note: phone_number not included - Vietnam (+84) not supported by Clerk
