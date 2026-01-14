@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { formatPhoneNumber } from "@/utils/phoneFormat";
 
 interface UserDetailsDialogProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export const UserDetailsDialog = ({
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -44,6 +46,7 @@ export const UserDetailsDialog = ({
       setFormData({
         name: user.name || "",
         email: user.email || "",
+        phone: user.phone || "",
       });
     }
   }, [user]);
@@ -121,6 +124,7 @@ export const UserDetailsDialog = ({
       setFormData({
         name: user.name || "",
         email: user.email || "",
+        phone: user.phone || "",
       });
     }
   };
@@ -183,6 +187,21 @@ export const UserDetailsDialog = ({
                 )}
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-gray-700">
+                  Số điện thoại
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Nhập số điện thoại"
+                  className="border-lightBorderV1 focus:border-mainTextHoverV1"
+                />
+              </div>
+
               <div className="flex gap-2 justify-end pt-4">
                 <Button
                   variant="outline"
@@ -205,33 +224,95 @@ export const UserDetailsDialog = ({
             </>
           ) : (
             <>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-700">Clerk ID</p>
-                    <p className="font-semibold text-gray-700">
-                      {user.clerk_id}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">Tên</p>
-                    <p className="font-semibold text-gray-700">{user.name}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">Email</p>
-                    <p className="font-semibold text-gray-700">{user.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">Tổng chuyến đi</p>
-                    <Badge variant="blue">{user.total_rides || 0}</Badge>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      Chuyến đi hoàn thành
-                    </p>
-                    <Badge variant="green">{user.completed_rides || 0}</Badge>
-                  </div>
-                </div>
+              <div className="overflow-hidden rounded-lg border border-gray-200">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50 w-1/3">
+                        Clerk ID
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
+                          {user.clerk_id}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50">
+                        Họ tên
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900 font-semibold">
+                        {user.name}
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50">
+                        Email
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        <a
+                          href={`mailto:${user.email}`}
+                          className="text-blue-600 hover:text-blue-800 hover:underline"
+                        >
+                          {user.email}
+                        </a>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50">
+                        Số điện thoại
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        {user.phone ? (
+                          <a
+                            href={`tel:${user.phone}`}
+                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            {formatPhoneNumber(user.phone)}
+                          </a>
+                        ) : (
+                          <span className="text-gray-400 italic">
+                            Chưa cập nhật
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50">
+                        Tổng chuyến đi
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        <Badge variant="blue">{user.total_rides || 0}</Badge>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50">
+                        Chuyến đi hoàn thành
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        <Badge variant="green">
+                          {user.completed_rides || 0}
+                        </Badge>
+                      </td>
+                    </tr>
+                    {user.total_spent !== undefined &&
+                      user.total_spent !== null && (
+                        <tr className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 text-sm font-medium text-gray-700 bg-gray-50">
+                            Tổng chi tiêu
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            <span className="font-semibold text-green-600">
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(user.total_spent)}
+                            </span>
+                          </td>
+                        </tr>
+                      )}
+                  </tbody>
+                </table>
               </div>
               <div className="flex gap-2 justify-end pt-4">
                 <Button variant="outline" onClick={handleClose}>

@@ -35,11 +35,13 @@ interface CreateUserData {
   name: string;
   email: string;
   password: string;
+  phone?: string;
 }
 
 interface UpdateUserData {
   name?: string;
   email?: string;
+  phone?: string;
 }
 
 interface UsersQueryParams {

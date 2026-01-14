@@ -35,6 +35,7 @@ export const UserCreateDialog = ({
     name: "",
     email: "",
     password: "",
+    phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -97,6 +98,7 @@ export const UserCreateDialog = ({
       name: "",
       email: "",
       password: "",
+      phone: "",
     });
     setErrors({});
     onClose();
@@ -157,6 +159,21 @@ export const UserCreateDialog = ({
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
               )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-gray-700">
+                Số điện thoại
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Nhập số điện thoại"
+                className="border-lightBorderV1 focus:border-mainTextHoverV1"
+              />
             </div>
 
             <div className="space-y-2">
