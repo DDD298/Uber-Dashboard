@@ -95,14 +95,9 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  console.log("PATCH Request received for ID:", id);
   try {
     const driverId = parseInt(id);
-    console.log("Parsed Driver ID:", driverId);
-    
     const body = await _request.json();
-    console.log("Request Body:", body);
-    
     const {
       first_name,
       last_name,
@@ -174,9 +169,6 @@ export async function PATCH(
 
     values.push(driverId);
 
-    console.log(`Executing Update: UPDATE drivers SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`);
-    console.log("Values:", values);
-
     const result = await executeSql(
       `UPDATE drivers
        SET ${updates.join(", ")}
@@ -185,8 +177,6 @@ export async function PATCH(
       values
     );
     
-    console.log("Update Result:", result);
-
     if (result.length === 0) {
       return NextResponse.json(
         { 
