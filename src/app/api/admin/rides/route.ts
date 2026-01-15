@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const status = searchParams.get("status") || "all";
-    const paymentStatus = searchParams.get("paymentStatus") || "all";
+    const paymentStatus = searchParams.get("payment_status") || "all";
     const driverId = searchParams.get("driverId");
     const userId = searchParams.get("userId");
     const dateFrom = searchParams.get("dateFrom");

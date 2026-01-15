@@ -151,10 +151,8 @@ export default function RidesPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tất cả thanh toán</SelectItem>
-              <SelectItem value="pending">Chờ thanh toán</SelectItem>
-              <SelectItem value="completed">Đã thanh toán</SelectItem>
-              <SelectItem value="failed">Thất bại</SelectItem>
-              <SelectItem value="refunded">Đã hoàn tiền</SelectItem>
+              <SelectItem value="paid">Đã thanh toán</SelectItem>
+              <SelectItem value="cancelled">Đã hủy</SelectItem>
             </SelectContent>
           </Select>
         </div>
