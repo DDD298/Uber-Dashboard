@@ -132,11 +132,6 @@ export default function DashboardPage() {
               <SelectItem value="1y">1 năm qua</SelectItem>
             </SelectContent>
           </Select>
-
-          <Button className="bg-mainTextHoverV1 hover:bg-primary/90 text-white">
-            <IconFile className="h-4 w-4" />
-            Xuất báo cáo
-          </Button>
         </div>
       </div>
 

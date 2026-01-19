@@ -102,7 +102,6 @@ export default function LoginPage() {
         router.push("/admin");
       }, 100);
     } catch (error: any) {
-      console.error("Login error:", error);
       toast.error(error?.message || "Đăng nhập thất bại");
       setIsPending(false);
     }
